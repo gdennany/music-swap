@@ -30,7 +30,7 @@ const LandingPage = () => {
                 </div>
             </div>
             <div className="right-section">
-                <p>Some text for the bottom right section</p>
+                <p className="futuristic-text">Some text for the bottom right section</p>
             </div>
         </div>
 
