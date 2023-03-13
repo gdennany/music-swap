@@ -1,18 +1,19 @@
-import React from 'react';
+import { useState } from 'react';
 // import {spotifyAPI} from '../../api/spotify';
-import './button.css';
+import './StreamingServiceButton.css';
 
 const StreamingServiceButton = ({image, text} : {image: string, text: string}) => {
-    
+    const [clicked, setClicked] = useState(false);
+
     function streamingServiceClick() {
+        setClicked(!clicked);
         console.log('click')
-        // spotifyAPI();
     }
 
     return (
-        <button className="button" onClick={streamingServiceClick}>
-            <img src={image} alt="" className="button__image" />
-            <span className="button__text">{text}</span>
+        <button className={`button ${clicked ? 'clicked' : 'notClicked'}`} onClick={streamingServiceClick}>
+            <img src={image} alt="" className="button-image" />
+            <span className="button-text">{text}</span>
         </button>
   );
 };
