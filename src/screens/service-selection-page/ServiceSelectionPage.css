@@ -5,7 +5,7 @@
     height: 100vh;
     min-height: 100%;
 
-    overflow: hidden;
+    overflow: scroll;
     background-color: bisque;
 }
   
@@ -40,9 +40,36 @@
 }
 
 .text-block {
-    margin-top: 3rem;
+    margin-top: 1rem;
     width: 80%;
     text-align: center;
     font-size: 1.2rem;
     line-height: 1.5rem;
 }
+
+.rainbow-button {
+    font-size: 24px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+    background-size: 200% auto;
+    animation: rainbow-animation 3s ease-in-out infinite;
+    text-shadow: 2px 2px 4px rgba(244, 239, 239, 0.6);
+}
+
+.rainbow-button.hide {
+    visibility: hidden
+}
+  
+@keyframes rainbow-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+  }

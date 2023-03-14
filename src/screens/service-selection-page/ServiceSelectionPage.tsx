@@ -6,17 +6,20 @@ interface ServiceSelectionPageProps extends React.HTMLAttributes<HTMLDivElement>
 
 const EMPTY = '_______';
 
+/**
+ * Page where the user selects which streaming services they want to swap to/from.
+ */
 const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest }) => {
     const [fromService, setFromService] = useState(EMPTY);
     const [toService, setToService] = useState(EMPTY);
 
     const fromCallBack = (service: string) => {
-        console.log('fromCallBack: ' + service);
+        console.log('service: ' + service)
         setFromService(getTitle(service))
     };
 
     const toCallBack = (service: string) => {
-        console.log('toCallBack: ' + service);
+        console.log('service: ' + service)
         setToService(getTitle(service))
     };
 
@@ -27,10 +30,22 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest
         return service;
     }
 
+    const getShowSwapButton = () => {
+        if (fromService !== EMPTY 
+            && toService !== EMPTY
+            && fromService !== toService
+        ) {
+            console.log('show')
+            return true;
+        }
+        console.log('hide')
+        return false;
+    }
+
     return  (
     <div className="streaming-service-page" id={id} {...rest}>
         <div className="title">
-            <h1>Streaming Services</h1>
+            <h1>Streaming Service Selection</h1>
         </div>
   
         <div className="button-column-container">
@@ -45,7 +60,10 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest
         </div>
   
         <div className="text-block">
-          <p>Swapping music from {fromService} to {toService}</p>
+            <p>Swapping music from {fromService} to {toService}</p>
+            <button className={`rainbow-button ${getShowSwapButton() ? '' : 'hide'}`}>
+                Summon Swapping Sequence!
+            </button>
         </div>
       </div>
     );

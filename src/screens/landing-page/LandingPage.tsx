@@ -3,6 +3,9 @@ import { DownArrowButton } from "../../components/down-arrow-button/DownArrowBut
 
 import "./LandingPage.css";
 
+/**
+ * First page the user sees.
+ */
 const LandingPage = () => {
     const [isWizardSpinning, setIsWizardSpinning] = useState(false);
 
@@ -13,7 +16,7 @@ const LandingPage = () => {
     return (
     <div className="container">
         <div className="top-section">
-            <div className="image-container">
+            <div className="logo-container">
                 <img src="/MusicSwapLogo.png" alt="Music Swap Logo" />
             </div>
         </div>

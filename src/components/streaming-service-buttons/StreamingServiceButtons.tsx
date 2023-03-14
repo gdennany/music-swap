@@ -20,11 +20,11 @@ const StreamingServiceButtons: React.FC<MyComponentProps> = ({ serviceCallback }
         // user re-clicked the same serivce button, so reset it's state
         if (clickedService === service) {
             setClickedService("");
+            serviceCallback("");
         } else {
             setClickedService(service);
+            serviceCallback(service);
         }
-        
-        serviceCallback(service);
     };
 
     return (
