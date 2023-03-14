@@ -5,7 +5,6 @@ import "./DownArrowButton.css";
 export function DownArrowButton() {
 
     const scrollToNextPage = () => {
-        console.log('scroll')
         scroller.scrollTo('serviceSelectionPage', {
           duration: 1000,
           delay: 0,
