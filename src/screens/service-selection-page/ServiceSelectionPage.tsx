@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ConfirmServicesModal from "../../components/comfirm-services-modal/ConfirmServicesModal";
 import StreamingServiceButtons from "../../components/streaming-service-buttons/StreamingServiceButtons";
 import "./ServiceSelectionPage.css";
 
@@ -12,14 +13,13 @@ const EMPTY = '_______';
 const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest }) => {
     const [fromService, setFromService] = useState(EMPTY);
     const [toService, setToService] = useState(EMPTY);
-
+    const [showConfirmServices, setShowConfirmServices] = useState(false);
+    
     const fromCallBack = (service: string) => {
-        console.log('service: ' + service)
         setFromService(getTitle(service))
     };
 
     const toCallBack = (service: string) => {
-        console.log('service: ' + service)
         setToService(getTitle(service))
     };
 
@@ -31,16 +31,21 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest
     }
 
     const getShowSwapButton = () => {
-        if (fromService !== EMPTY 
+        return fromService !== EMPTY 
             && toService !== EMPTY
-            && fromService !== toService
-        ) {
-            console.log('show')
-            return true;
-        }
-        console.log('hide')
-        return false;
+            && fromService !== toService;
     }
+
+    const handleModalContinue = () => {
+        // handle continue button click
+        console.log('continue modal')
+    };
+    
+    const handleModalCancel = () => {
+        // handle cancel button click
+        setShowConfirmServices(false);
+        console.log('close modal')
+    };
 
     return  (
     <div className="streaming-service-page" id={id} {...rest}>
@@ -61,9 +66,20 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest
   
         <div className="text-block">
             <p>Swapping music from {fromService} to {toService}</p>
-            <button className={`rainbow-button ${getShowSwapButton() ? '' : 'hide'}`}>
+            <button
+              className={`rainbow-button ${getShowSwapButton() ? '' : 'hide'}`}
+              onClick={() => setShowConfirmServices(true)}
+              >
                 Summon Swapping Sequence!
             </button>
+            {showConfirmServices && (
+              <ConfirmServicesModal
+                from={fromService}
+                to={toService}
+                onContinue={handleModalContinue}
+                onCancel={handleModalCancel}
+              />
+      )}
         </div>
       </div>
     );
