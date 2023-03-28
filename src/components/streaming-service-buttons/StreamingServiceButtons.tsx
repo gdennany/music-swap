@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { useState } from 'react';
 // import {spotifyAPI} from '../../api/spotify';
 import './StreamingServiceButtons.css';
 
@@ -30,7 +30,11 @@ const StreamingServiceButtons: React.FC<MyComponentProps> = ({ serviceCallback }
     return (
         <div>
             {SERVICES.map((service) => (
-                <button className={`button ${clickedService === service ? 'clicked' : 'notClicked'}`} onClick={() => handleClick(service)}>
+                <button
+                  className={`button ${clickedService === service ? 'clicked' : 'notClicked'}`}
+                  onClick={() => handleClick(service)}
+                  key={service}
+                  >
                     <img src={"/" + service + ".png"} alt="" className="button-image" />
                     <span className="button-text">{service}</span>
                 </button>
