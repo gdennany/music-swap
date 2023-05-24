@@ -1,4 +1,4 @@
-import "./ConfirmServicesModal.css"
+import "./ConfirmServicesModal.css";
 
 type ConfirmServicesModalProps = {
     from: string;
@@ -8,7 +8,8 @@ type ConfirmServicesModalProps = {
   };
 
 /**
- * Informative confirm continue modal to display once the user has selected two streaming services, and tries initiating the swap.
+ * Informative modal to display once the user has selected two streaming services and tries initiating the swap.
+ * User can either cancel or continue (navigate to FromPage.tsx).
  */
 const ConfirmServicesModal: React.FC<ConfirmServicesModalProps> = ({
     from,
@@ -19,11 +20,10 @@ const ConfirmServicesModal: React.FC<ConfirmServicesModalProps> = ({
     return (
       <div className="dialog-box">
         <div className="dialog-box-message">
-            To retrieve data from {from} and to save to {to}, you must grant this website permission to both. Essentially, to complete this music data swap, you will
-            need to log in to both accounts when prompted.
+            To perform this swap, you will need to grant access to your {from} and {to} accounts.
             <br />
             <br />
-            We only ask for the minimum required access to your data, and will never save/sell any of it.
+            We only ask for the minimum required access to your data, and will never save or sell any of it.
         </div>
         <div className="dialog-box-buttons">
           <button onClick={onCancel}>Cancel</button>

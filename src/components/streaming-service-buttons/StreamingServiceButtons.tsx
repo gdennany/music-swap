@@ -11,7 +11,8 @@ interface MyComponentProps {
 const SERVICES = ["Amazon", "Apple", "Spotify", "Tidal"];
 
 /**
- * Renders the streaming service buttons on the ServiceSelectionPage 
+ * Renders the streaming service buttons on the ServiceSelectionPage.tsx.
+ * Button has an image on the left an text on the right, and animates on hover/click.
  */
 const StreamingServiceButtons: React.FC<MyComponentProps> = ({ serviceCallback }) => {
     const [clickedService, setClickedService] = useState("");

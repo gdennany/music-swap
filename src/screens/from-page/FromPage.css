@@ -1,16 +1,15 @@
-.streaming-service-page {
+.from-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100vh;
     min-height: 100%;
 
-    overflow: scroll;
+    overflow: hidden;
     background-color: bisque;
 }
 
 .title {
-/* font-size: 2rem; */
     font-weight: bold;
     margin-top: 30px;
 }
@@ -46,32 +45,3 @@
     font-size: 1.2rem;
     line-height: 1.5rem;
 }
-
-.rainbow-button {
-    font-size: 18px;
-    padding: 12px 22px;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    color: black;
-    background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
-    background-size: 200% auto;
-    animation: rainbow-animation 3s ease-in-out infinite;
-    text-shadow: 2px 2px 4px rgba(244, 239, 239, 0.6);
-}
-
-.rainbow-button.hide {
-    visibility: hidden
-}
-  
-@keyframes rainbow-animation {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-  }

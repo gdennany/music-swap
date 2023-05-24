@@ -11,7 +11,7 @@ interface ServiceSelectionPageProps extends React.HTMLAttributes<HTMLDivElement>
 const EMPTY = '_______';
 
 /**
- * Page where the user selects which streaming services they want to swap to/from.
+ * Page below landing page where the user selects which streaming services they want to swap to/from.
  */
 const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest }) => {
     const navigate = useNavigate();
@@ -40,12 +40,7 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest
             && fromService !== toService;
     }
 
-    const handleModalContinue = () => {
-        // handle continue button click
-        console.log('continue modal')
-        console.log('from: ' + fromService)
-        console.log('to: ' + toService)
-        
+    const handleModalContinue = () => {        
         navigate('/fromServiceSelection', { 
             state: { 
               fromService,
@@ -55,7 +50,6 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest
     };
     
     const handleModalCancel = () => {
-        // handle cancel button click
         setShowConfirmServicesModal(false);
     };
 

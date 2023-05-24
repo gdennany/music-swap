@@ -4,7 +4,7 @@ import { DownArrowButton } from "../../components/down-arrow-button/DownArrowBut
 import "./LandingPage.css";
 
 /**
- * First page the user sees.
+ * Landing page. Shows the logo and copy explaining what MusicSwap does.
  */
 const LandingPage = () => {
     const [isWizardSpinning, setIsWizardSpinning] = useState(false);
@@ -33,7 +33,12 @@ const LandingPage = () => {
                 </div>
             </div>
             <div className="right-section">
-                <p className="futuristic-text">Some text for the bottom right section</p>
+                <p className="futuristic-text">
+                    Tired of your old streaming service?
+                    <br/>
+                    <br/>
+                    Now it's never been easier to transfer your old library to your new streaming service. 
+                </p>
             </div>
         </div>
 
