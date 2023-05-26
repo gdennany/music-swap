@@ -1,61 +1,69 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import AuthorizationButton from '../../components/authorization-button/AuthorizationButton';
+import ErrorPage from '../../components/error-page/ErrorPage';
 import { Context } from '../../Context';
-import redirectToSpotifyLogin from '../../scripts/spotify/SpotifyAuthorization';
+import { isEmptyString } from '../../helpers/helpers';
+import { getSpotifyAccessToken } from '../../scripts/spotify/SpotifyAuthorization';
 
 import "./FromPage.css";
 
-interface FromPageProps extends React.HTMLAttributes<HTMLDivElement> { };
-
 /**
- * Requests access to read the users `fromService` library. If access is granted, users library will appear.
+ * Page where user authorizes and selects songs/playlists/etc they want to swap over.
  */
-//TODO: clean up this page and associated CSS file. Need to get permissions to read from the users
-// `fromService` here
-const FromPage: React.FC<FromPageProps> = () => {
-    const { fromService, toService, setFromService, setToService } = useContext(Context);
+const FromPage: React.FC = () => {
+    const { accessToken, fromService, toService, setAccessToken, setFromService, setToService } = useContext(Context);
 
-    // if props not properly set go back to the landing page
-    setFromService(localStorage.getItem('fromService') ?? '')
-    setToService(localStorage.getItem('toService') ?? '')
-    if (!fromService || !toService || fromService === "" || toService === "") {
+    // Handle redirect from Spotify
+    useEffect(() => {
+        setFromService(localStorage.getItem('fromService') ?? '');
+        setToService(localStorage.getItem('toService') ?? '');
+
+        const fetchData = async () => {
+            const code = new URLSearchParams(window.location.search).get('code')
+            if (code) {
+                const token = await getSpotifyAccessToken(code);
+                if (token) {
+                    setAccessToken(token);
+                }
+            }
+        };
+
+        fetchData();
+    }, [])
+
+    // Props not properly set => show error page
+    if (isEmptyString(fromService) || isEmptyString(toService)) {
         return (
-            <div>
-                <p>Please don't access this URL directly &#x1F600;</p>
-                <img src="/Dog.JPG" alt="Music Swap Logo" style={{ height: "80%", width: "46%" }} />
-            </div>
-        )
+            <ErrorPage />
+        );
     }
 
+    // Authorization to read data not granted.
+    if (isEmptyString(accessToken)) {
+        return (
+            <div className="from-page" >
+                <div className="title">
+                    <h1>From Page</h1>
+                </div>
 
+                <div className="text-block">
+                    <p>Click below so we can read from your {fromService} library.</p>
+                </div>
+
+                <div>
+                    {/* <button onClick={redirectToSpotifyLogin}>Connect with Spotify</button> */}
+                    <AuthorizationButton serviceName={fromService} />
+                </div>
+            </div>
+        );
+    }
+
+    // Show the users library
     return (
         <div className="from-page" >
-            <div className="title">
-                <h1>Streaming Service Selection</h1>
-            </div>
-
-            <div className="button-column-container">
-                <div className="button-column">
-                    <h2>From:</h2>
-                    {fromService}
-                </div>
-                <div className="button-column">
-                    <h2>To:</h2>
-                    {toService}
-                </div>
-            </div>
-
-            <div className="text-block">
-                <p>Swapping music from to</p>
-            </div>
-
-            <div>
-                <h1>Spotify App</h1>
-                <button onClick={redirectToSpotifyLogin}>Connect with Spotify</button>
-            </div>
+            successfully authorized
         </div>
     );
-
-
 
 }
 

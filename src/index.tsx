@@ -8,9 +8,10 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  // strict mode is some development only thing that causes things to render twice. Not sure why that would be desired.
+  // <React.StrictMode>
+  <App />
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

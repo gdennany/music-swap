@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// import {spotifyAPI} from '../../api/spotify';
 import './StreamingServiceButtons.css';
 
 type MyCallbackType = (serviceName: string) => void;

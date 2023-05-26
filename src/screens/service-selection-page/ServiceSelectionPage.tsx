@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmServicesModal from "../../components/comfirm-services-modal/ConfirmServicesModal";
 import StreamingServiceButtons from "../../components/streaming-service-buttons/StreamingServiceButtons";
 import { Context } from "../../Context";
+import { isEmptyString } from "../../helpers/helpers";
 
 import "./ServiceSelectionPage.css";
 
@@ -21,10 +22,10 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest
 
     // reset service selections if you come back to this page.
     useEffect(() => {
-        localStorage.setItem('fromService', "");
-        localStorage.setItem('toService', "");
         setFromService("");
         setToService("");
+        localStorage.setItem('fromService', "");
+        localStorage.setItem('toService', "");
     }, []);
 
     // Streaming service selection callbacks
@@ -32,9 +33,7 @@ const ServiceSelectionPage: React.FC<ServiceSelectionPageProps> = ({ id, ...rest
     const toCallBack = (service: string) => setToService(service);
 
     const shouldShowSummonSwapButton = () => {
-        return fromService !== ""
-            && toService !== ""
-            && fromService !== toService;
+        return !isEmptyString(fromService) && !isEmptyString(toService) && fromService !== toService;
     }
 
     const handleModalContinue = () => {
