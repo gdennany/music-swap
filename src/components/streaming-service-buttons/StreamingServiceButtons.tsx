@@ -32,16 +32,16 @@ const StreamingServiceButtons: React.FC<MyComponentProps> = ({ serviceCallback }
         <div>
             {SERVICES.map((service) => (
                 <button
-                  className={`button ${clickedService === service ? 'clicked' : 'notClicked'}`}
-                  onClick={() => handleClick(service)}
-                  key={service}
-                  >
+                    className={`button ${clickedService === service ? 'clicked' : 'notClicked'}`}
+                    onClick={() => handleClick(service)}
+                    key={service}
+                >
                     <img src={"/" + service + ".png"} alt="" className="button-image" />
                     <span className="button-text">{service}</span>
                 </button>
             ))}
         </div>
-  );
+    );
 };
 
 export default StreamingServiceButtons;
