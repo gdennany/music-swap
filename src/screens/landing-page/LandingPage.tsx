@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DownArrowButton } from "../../components/down-arrow-button/DownArrowButton";
 
 import "./LandingPage.css";

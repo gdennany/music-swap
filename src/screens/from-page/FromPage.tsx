@@ -1,9 +1,10 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AuthorizationButton from '../../components/authorization-button/AuthorizationButton';
 import ErrorPage from '../../components/error-page/ErrorPage';
 import { Context } from '../../Context';
 import { isEmptyString } from '../../helpers/helpers';
-import { getSpotifyAccessToken } from '../../scripts/spotify/SpotifyAuthorization';
+import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotify/SpotifyAuthorization';
+import LoadingPage from '../loading-page/LoadingPage';
 
 import "./FromPage.css";
 
@@ -12,6 +13,9 @@ import "./FromPage.css";
  */
 const FromPage: React.FC = () => {
     const { accessToken, fromService, toService, setAccessToken, setFromService, setToService } = useContext(Context);
+    const [spotifyData, setSpotifyData] = useState<Object | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
     // Handle redirect from Spotify
     useEffect(() => {
@@ -21,21 +25,27 @@ const FromPage: React.FC = () => {
         const fetchData = async () => {
             const code = new URLSearchParams(window.location.search).get('code')
             if (code) {
+                setIsLoading(true);
                 const token = await getSpotifyAccessToken(code);
                 if (token) {
                     setAccessToken(token);
+                    const data = await fetchSpotifyData(token);
+                    setSpotifyData(data);
                 }
+                setIsLoading(false);
             }
         };
 
         fetchData();
-    }, [])
+    }, [setAccessToken, setFromService, setToService])
+
+    if (isLoading) {
+        return <LoadingPage />;;
+    }
 
     // Props not properly set => show error page
     if (isEmptyString(fromService) || isEmptyString(toService)) {
-        return (
-            <ErrorPage />
-        );
+        return <ErrorPage />;
     }
 
     // Authorization to read data not granted.
@@ -59,9 +69,11 @@ const FromPage: React.FC = () => {
     }
 
     // Show the users library
+    console.log('spotify data: ' + JSON.stringify(spotifyData))
     return (
+
         <div className="from-page" >
-            successfully authorized
+            successfully authorized {JSON.stringify(spotifyData)}
         </div>
     );
 

@@ -1,10 +1,7 @@
+import axios from 'axios';
 import queryString from 'query-string';
-import { isEmptyString } from '../../helpers/helpers';
 
-//TODO: save client ID, secret, and redirectURI in secure location
-const client_id = '';
-const client_secret = '';
-const redirect_uri = 'http://localhost:3000/fromServiceSelection';
+import { client_id, client_secret, redirect_uri } from '../../private';
 
 /**
  * Request access to users spotify data. Callback returns an authorizationCode in the URL.
@@ -18,8 +15,9 @@ export const redirectToSpotifyLogin = () => {
         redirect_uri: redirect_uri,
         //TODO: adjust scope if needed.
         // user-read-private & user-read-email => Not sure if necessary
+        // user-library-read => access to "Your Music" library (i.e. liked songs & albums)
         // playlist-read-private playlist-read-collaborative => read users public (collaborative) and private playlists
-        scope: 'playlist-read-private playlist-read-collaborative'
+        scope: 'user-library-read playlist-read-private playlist-read-collaborative'
     });
 
     window.location.href = `https://accounts.spotify.com/authorize?${queries}`;
@@ -31,48 +29,52 @@ export const redirectToSpotifyLogin = () => {
  */
 export async function getSpotifyAccessToken(authorizationCode: string) {
     try {
-        const response = await fetch('https://accounts.spotify.com/api/token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + btoa(client_id + ':' + client_secret),
-            },
-            body: new URLSearchParams({
+        const response = await axios.post('https://accounts.spotify.com/api/token',
+            new URLSearchParams({
                 'grant_type': 'authorization_code',
                 'code': authorizationCode,
                 'redirect_uri': 'http://localhost:3000/fromServiceSelection'
             }),
-        });
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Basic ' + btoa(client_id + ':' + client_secret),
+                }
+            }
+        );
 
-        console.log('Response: ' + response.status);
-        if (response.ok) {
-            const data = await response.json();
-            // TODO handle refresh token so user doesn't have to go through entire auth process again. Access tokens expire after a set amount of time(maybe an hour?).
-            const { access_token, refresh_token } = data;
-            console.log('access_token: ' + access_token);
-            // Save the access token here
-            return access_token;
-        } else {
-            console.log('Response Status not okay');
-        }
+        // TODO handle refresh token so user doesn't have to go through entire auth process again. 
+        // Access tokens expire after a set amount of time(maybe an hour?).
+        // const { access_token, refresh_token } = response.data;
+        const { access_token } = response.data;
+        // Save the access token here
+        return access_token;
+
     } catch (error) {
-        console.log('Error in getSpotifyAccessToken: ' + error);
+        console.error('Error in getSpotifyAccessToken: ' + error);
     }
 };
 
-async function getUserPlaylists(access_token: string) {
-    try {
-        const response = await fetch('https://api.spotify.com/v1/me/playlists', {
-            headers: { 'Authorization': 'Bearer ' + access_token },
+export const fetchSpotifyData = async (accessToken: string) => {
+
+    const callEndpoint = async (accessToken: string, endpoint: string) => {
+        const response = await axios.get(`https://api.spotify.com/v1/me/${endpoint}?limit=50`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data);
-        } else {
-            console.error('Response Status not okay');
-        }
-    } catch (error) {
-        console.error(error);
+        return response.data;
     }
-}
+
+    const likedSongs = await callEndpoint(accessToken, 'tracks');
+    const albums = await callEndpoint(accessToken, 'albums');
+    const playlists = await callEndpoint(accessToken, 'playlists');
+
+    let spotyifyMap = {
+        'likedSongs': likedSongs,
+        'albums': albums,
+        'playlists': playlists
+    };
+    return spotyifyMap;
+};
