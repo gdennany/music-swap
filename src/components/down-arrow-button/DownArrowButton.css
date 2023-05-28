@@ -1,28 +1,30 @@
 .down-arrow-button-container {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 5%;
-    cursor: pointer;
-    padding-bottom: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 5%;
+  cursor: pointer;
+  padding-bottom: 10px;
 }
 
 .hover-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    animation: jump 1.2s ease-in-out 1.5s forwards;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: jump 1.2s ease-in-out 1.5s forwards;
 }
 
 @keyframes jump {
-    0% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-100%);
-    }
-    100% {
-      transform: translateY(0);
-    }
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
