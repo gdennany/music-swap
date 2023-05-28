@@ -14,30 +14,43 @@ import "./FromPage.css";
 const FromPage: React.FC = () => {
     const { accessToken, fromService, toService, setAccessToken, setFromService, setToService } = useContext(Context);
     const [spotifyData, setSpotifyData] = useState<Object | null>(null);
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
 
 
     // Handle redirect from Spotify
     useEffect(() => {
+        window.scrollTo(0, 0);
         setFromService(localStorage.getItem('fromService') ?? '');
         setToService(localStorage.getItem('toService') ?? '');
 
         const fetchData = async () => {
-            const code = new URLSearchParams(window.location.search).get('code')
-            if (code) {
-                setIsLoading(true);
-                const token = await getSpotifyAccessToken(code);
-                if (token) {
-                    setAccessToken(token);
-                    const data = await fetchSpotifyData(token);
-                    setSpotifyData(data);
+            try {
+                const code = new URLSearchParams(window.location.search).get('code')
+                if (code) {
+                    setIsLoading(true);
+                    const token = await getSpotifyAccessToken(code);
+                    if (token) {
+                        setAccessToken(token);
+                        const data = await fetchSpotifyData(token);
+                        setSpotifyData(data);
+                    }
+                    setIsLoading(false);
                 }
-                setIsLoading(false);
+            } catch (exception) {
+                console.log('catch exception: ' + exception)
+                setIsError(true);
             }
+
         };
 
         fetchData();
     }, [setAccessToken, setFromService, setToService])
+
+    if (isError) {
+        return <ErrorPage errorDescription='Something went wrong while accessing your music library &#x1F914; &#x1F9D0;' />;
+    }
 
     if (isLoading) {
         return <LoadingPage />;;
@@ -45,13 +58,13 @@ const FromPage: React.FC = () => {
 
     // Props not properly set => show error page
     if (isEmptyString(fromService) || isEmptyString(toService)) {
-        return <ErrorPage />;
+        return <ErrorPage errorDescription="Please don't access this URL directly &#x1F600;" />;
     }
 
     // Authorization to read data not granted.
     if (isEmptyString(accessToken)) {
         return (
-            <div className="from-page" >
+            <div className="from-page">
                 <div className="title">
                     <h1>From Page</h1>
                 </div>

@@ -1,0 +1,14 @@
+.error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: scroll;
+}
+
+.error-title {
+    margin-top: 30px;
+}
+
+.back-home-link {
+    padding-bottom: 15px;
+}

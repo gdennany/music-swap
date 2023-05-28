@@ -52,19 +52,31 @@ export async function getSpotifyAccessToken(authorizationCode: string) {
 
     } catch (error) {
         console.error('Error in getSpotifyAccessToken: ' + error);
+        throw error;
     }
 };
 
 export const fetchSpotifyData = async (accessToken: string) => {
 
-    const callEndpoint = async (accessToken: string, endpoint: string) => {
-        const response = await axios.get(`https://api.spotify.com/v1/me/${endpoint}?limit=50`, {
+    const callEndpoint = async (accessToken: string, url: string, isFullUrl = false) => {
+        const fullUrl = isFullUrl ? url : `https://api.spotify.com/v1/me/${url}?limit=50`;
+
+        const response = await axios.get(fullUrl, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         });
 
-        return response.data;
+        const data = response.data;
+
+        // Spotify API returns only 50 items at a time. You must call the "next" endpoint untile there is no next endpoint
+        // to get all of the users data.
+        if (data.next) {
+            const nextPageData = await callEndpoint(accessToken, data.next, true);
+            data.items = [...data.items, ...nextPageData.items];
+        }
+
+        return data;
     }
 
     const likedSongs = await callEndpoint(accessToken, 'tracks');
