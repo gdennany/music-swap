@@ -59,6 +59,7 @@ export async function getSpotifyAccessToken(authorizationCode: string) {
 export const fetchSpotifyData = async (accessToken: string) => {
 
     const callEndpoint = async (accessToken: string, url: string, isFullUrl = false) => {
+        console.log('fetching!')
         const fullUrl = isFullUrl ? url : `https://api.spotify.com/v1/me/${url}?limit=50`;
 
         const response = await axios.get(fullUrl, {
@@ -71,10 +72,11 @@ export const fetchSpotifyData = async (accessToken: string) => {
 
         // Spotify API returns only 50 items at a time. You must call the "next" endpoint untile there is no next endpoint
         // to get all of the users data.
-        if (data.next) {
-            const nextPageData = await callEndpoint(accessToken, data.next, true);
-            data.items = [...data.items, ...nextPageData.items];
-        }
+        //Commenting out during development => only getting first page of data so its quicker and not as intensive on the API
+        // if (data.next) {
+        //     const nextPageData = await callEndpoint(accessToken, data.next, true);
+        //     data.items = [...data.items, ...nextPageData.items];
+        // }
 
         return data;
     }

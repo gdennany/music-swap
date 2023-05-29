@@ -1,0 +1,52 @@
+.accordion-section {
+    margin: 1em;
+}
+
+.accordion {
+    background-color: #f7f7f7;
+    color: #393737;
+    cursor: pointer;
+    padding: 1.4em;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    transition: 0.4s;
+    border-radius: 5px;
+}
+
+.accordion.open {
+    background-color: #ddd;
+}
+
+.accordion:after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+.accordion.open:after {
+    content: "\2212";
+}
+
+.accordion-content {
+    padding: 0 1em;
+    max-height: 0;
+    overflow-y: auto;
+    transition: max-height 0.2s ease-out;
+    background-color: white;
+}
+
+
+.accordion-content p {
+    /* TODO this is the temporary grey separator between accordian items. Will need to add this to the song component instead */
+    border-top: 0.5px solid rgb(191, 186, 186);
+    padding: 1em 0px;
+}
+
+.accordion-section>.open~.accordion-content {
+    max-height: 35%;
+    overflow: scroll;
+}

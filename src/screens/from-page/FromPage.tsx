@@ -7,11 +7,19 @@ import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotify/S
 import LoadingPage from '../loading-page/LoadingPage';
 
 import "./FromPage.css";
+import MusicData from '../../components/music-data/MusicData';
 
 /**
  * Page where user authorizes and selects songs/playlists/etc they want to swap over.
  */
 const FromPage: React.FC = () => {
+
+    // return (
+    //     <div className="from-page" >
+    //         <MusicData />
+    //     </div>
+    // );
+
     const { accessToken, fromService, toService, setAccessToken, setFromService, setToService } = useContext(Context);
     const [spotifyData, setSpotifyData] = useState<Object | null>(null);
 
@@ -61,35 +69,25 @@ const FromPage: React.FC = () => {
         return <ErrorPage errorDescription="Please don't access this URL directly &#x1F600;" />;
     }
 
-    // Authorization to read data not granted.
+    // No access granted to read from fromService yet, so ask for it
     if (isEmptyString(accessToken)) {
         return (
-            <div className="from-page">
-                <div className="title">
-                    <h1>From Page</h1>
-                </div>
-
-                <div className="text-block">
-                    <p>Click below so we can read from your {fromService} library.</p>
-                </div>
-
-                <div>
-                    {/* <button onClick={redirectToSpotifyLogin}>Connect with Spotify</button> */}
-                    <AuthorizationButton serviceName={fromService} />
-                </div>
+            <div className="from-page" >
+                <h1 className="title">From Page</h1>
+                <p className="text-block">Click below so we can read from your {fromService} library.</p>
+                <AuthorizationButton serviceName={fromService} />
             </div>
         );
     }
 
-    // Show the users library
+    // Access granted, show the users library
     console.log('spotify data: ' + JSON.stringify(spotifyData))
     return (
-
         <div className="from-page" >
-            successfully authorized {JSON.stringify(spotifyData)}
+            {/* <p className="text-block">Successfully authorized {JSON.stringify(spotifyData)}</p> */}
+            <MusicData />
         </div>
     );
-
 }
 
 export default FromPage;

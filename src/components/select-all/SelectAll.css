@@ -1,0 +1,15 @@
+.select-all-container {
+    display: flex;
+    align-items: center;
+    margin: 3px;
+    margin-top: 10px;
+}
+
+.select-all-input {
+    margin-left: 10px;
+    margin-top: 4px;
+}
+
+.select-all-label {
+    margin-left: 5px;
+}
