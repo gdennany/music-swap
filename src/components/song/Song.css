@@ -1,0 +1,65 @@
+.songContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.songContainer input[type="checkbox"] {
+    margin-right: 1em;
+    margin-left: 0;
+    width: 15px;
+    height: 15px;
+    box-sizing: border-box;
+    min-width: 15px;
+    min-height: 15px;
+}
+
+.songDetails {
+    display: flex;
+    align-items: center;
+}
+
+.songImage {
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    margin-right: 0.5em;
+}
+
+.songInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.songInfo h3,
+.songInfo p {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+}
+
+.songInfo h3 {
+    font-size: 1em;
+    color: #000;
+}
+
+.songInfo p {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.playPauseButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1db954;
+    font-size: 1.2em;
+    text-align: right;
+}

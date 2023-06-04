@@ -5,6 +5,7 @@ import SelectAll from "../select-all/SelectAll";
 import { MusicDataInterface } from "../../Constants";
 
 import './MusicData.css';
+import Song from "../song/Song";
 
 interface MusicDataProps {
     musicData: MusicDataInterface;
@@ -24,15 +25,14 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
         console.log(`SelectAll Checkbox is now ${checked ? "checked" : "unchecked"}`);
     };
 
-    console.log('in musicData data: ' + JSON.stringify(musicData))
-
     return (
         <div className="music-data-page">
             <Accordion title="&#x1F3B5;   Songs">
                 <SearchBar placeholder={'Search for songs by title or artist name'} onSearchTermChange={handleSearchTermChange} />
                 <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
-                <p>Content for Songs</p>
-                <p>Content for Songs</p>
+                {musicData.likedSongs.items.map((song: any, index: number) => (
+                    <Song key={index} song={song} />
+                ))}
             </Accordion>
             <Accordion title="&#x1F4BF;   Albums">
                 <SearchBar placeholder={'Search for albums by title or artist name'} onSearchTermChange={handleSearchTermChange} />

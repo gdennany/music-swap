@@ -1,5 +1,7 @@
 .accordion-section {
     margin: 1em;
+    max-height: 80vh;
+    overflow-y: scroll;
 }
 
 .accordion {
@@ -41,8 +43,6 @@
 
 
 .accordion-content p {
-    /* TODO this is the temporary grey separator between accordian items. Will need to add this to the song component instead */
-    border-top: 0.5px solid rgb(191, 186, 186);
     padding: 1em 0px;
 }
 

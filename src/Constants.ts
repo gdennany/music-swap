@@ -6,7 +6,7 @@ export const TIDAL = "Tidal";
 export const SERVICES = [AMAZON, APPLE, SPOTIFY, TIDAL];
 
 export interface MusicDataInterface {
-    'likedSongs': object;
-    'albums': object;
-    'playlists': object;
+    'likedSongs': any;
+    'albums': any;
+    'playlists': any;
 }

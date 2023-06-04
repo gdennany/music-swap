@@ -1,13 +1,18 @@
 .select-all-container {
     display: flex;
     align-items: center;
-    margin: 3px;
     margin-top: 10px;
 }
 
 .select-all-input {
-    margin-left: 10px;
-    margin-top: 4px;
+    margin-right: 0.5em;
+    margin-left: 0;
+    width: 15px;
+    height: 15px;
+    box-sizing: border-box;
+    min-width: 15px;
+    min-height: 15px;
+
 }
 
 .select-all-label {

@@ -1,4 +1,5 @@
 .music-data-page {
-    min-width: 85vw;
+    min-width: 90vw;
+    max-width: 95vw;
     min-height: 100vh;
 }
