@@ -1,10 +1,9 @@
-import { SPOTIFY } from '../../Constants';
+import { AMAZON, APPLE, SPOTIFY, TIDAL } from '../../Constants';
 import { redirectToSpotifyLogin } from '../../scripts/spotify/authorization';
-import ErrorPage from '../error-page/ErrorPage';
 import './AuthorizationButton.css';
 
 
-interface MyComponentProps {
+interface AuthorizationButtonProps {
     serviceName: string;
 }
 
@@ -12,15 +11,19 @@ interface MyComponentProps {
  * Renders a button that user presses to send an access request to a streaming sercvice. 
  * Button has an image on the left an text on the right, and animates on hover/click.
  */
-const AuthorizationButton: React.FC<MyComponentProps> = ({ serviceName }) => {
+const AuthorizationButton: React.FC<AuthorizationButtonProps> = ({ serviceName }) => {
 
     const handleClick = (serviceName: string) => {
         switch (serviceName) {
+            case AMAZON:
+                break;
+            case APPLE:
+                break;
             case SPOTIFY:
                 redirectToSpotifyLogin();
                 break;
-            default:
-                return <ErrorPage errorDescription='Something went wrong.' />;
+            case TIDAL:
+                break;
         }
     };
 

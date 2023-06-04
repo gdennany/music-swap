@@ -8,27 +8,19 @@ import LoadingPage from '../loading-page/LoadingPage';
 
 import "./FromPage.css";
 import MusicData from '../../components/music-data/MusicData';
-import { SPOTIFY } from '../../Constants';
+import { AMAZON, APPLE, MusicDataInterface, SPOTIFY, TIDAL } from '../../Constants';
 
 /**
  * Page where user authorizes and selects songs/playlists/etc they want to swap over.
  */
 const FromPage: React.FC = () => {
 
-    // return (
-    //     <div className="from-page" >
-    //         <MusicData />
-    //     </div>
-    // );
-
     const { accessToken, fromService, toService, setAccessToken, setFromService, setToService } = useContext(Context);
-    const [musicData, setMusicData] = useState<Object | null>(null);
+    const [musicData, setMusicData] = useState<MusicDataInterface | null>(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
 
-
-    // Handle redirect from Spotify
     useEffect(() => {
         window.scrollTo(0, 0);
         setFromService(localStorage.getItem('fromService') ?? '');
@@ -37,8 +29,11 @@ const FromPage: React.FC = () => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-
                 switch (localStorage.getItem('fromService')) {
+                    case AMAZON:
+                        break;
+                    case APPLE:
+                        break;
                     case SPOTIFY:
                         const code = new URLSearchParams(window.location.search).get('code')
                         if (code) {
@@ -50,8 +45,9 @@ const FromPage: React.FC = () => {
                             }
                         }
                         break;
+                    case TIDAL:
+                        break;
                 }
-
                 setIsLoading(false);
             } catch (exception) {
                 console.log('catch exception: ' + exception)
@@ -89,13 +85,17 @@ const FromPage: React.FC = () => {
     }
 
     // Access granted, show the users library
-    console.log('spotify data: ' + JSON.stringify(musicData))
-    return (
-        <div className="from-page" >
-            {/* <p className="text-block">Successfully authorized {JSON.stringify(spotifyData)}</p> */}
-            <MusicData />
-        </div>
-    );
+    if (musicData !== null) {
+        return (
+            <div className="from-page" >
+                {/* <p className="text-block">Successfully authorized {JSON.stringify(spotifyData)}</p> */}
+                <MusicData musicData={musicData} />
+            </div>
+        );
+    }
+
+    // Shouldn't get this far without a return
+    return <ErrorPage errorDescription='Something went wrong while accessing your music library &#x1F914; &#x1F9D0;' />;
 }
 
 export default FromPage;

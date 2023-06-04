@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import Accordion from "../accordian/Accordian";
 import SearchBar from "../search-bar/SearchBar";
 import SelectAll from "../select-all/SelectAll";
+import { MusicDataInterface } from "../../Constants";
 
 import './MusicData.css';
+
+interface MusicDataProps {
+    musicData: MusicDataInterface;
+}
 
 /**
  * Displays all of the users music data in an accordian. here is where the usert can select which music from their fromService to swap over to their toService.
  */
-const MusicData: React.FC = () => {
+const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const handleSearchTermChange = (searchTerm: string) => {
@@ -18,6 +23,8 @@ const MusicData: React.FC = () => {
     const handleSelectAllChange = (checked: boolean) => {
         console.log(`SelectAll Checkbox is now ${checked ? "checked" : "unchecked"}`);
     };
+
+    console.log('in musicData data: ' + JSON.stringify(musicData))
 
     return (
         <div className="music-data-page">

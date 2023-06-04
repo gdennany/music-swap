@@ -2,6 +2,7 @@ import axios from 'axios';
 import queryString from 'query-string';
 
 import { client_id, client_secret, redirect_uri } from '../../private';
+import { MusicDataInterface } from '../../Constants';
 
 /**
  * Request access to users spotify data. Callback returns an authorizationCode in the URL.
@@ -90,10 +91,11 @@ export const fetchSpotifyData = async (accessToken: string) => {
     const albums = await callEndpoint(accessToken, 'albums');
     const playlists = await callEndpoint(accessToken, 'playlists');
 
-    let spotyifyMap = {
+    let spotyifyData = {
         'likedSongs': likedSongs,
         'albums': albums,
         'playlists': playlists
-    };
-    return spotyifyMap;
+    } as MusicDataInterface;
+
+    return spotyifyData;
 };
