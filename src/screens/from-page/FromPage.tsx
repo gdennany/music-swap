@@ -3,11 +3,12 @@ import AuthorizationButton from '../../components/authorization-button/Authoriza
 import ErrorPage from '../../components/error-page/ErrorPage';
 import { Context } from '../../Context';
 import { isEmptyString } from '../../helpers/helpers';
-import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotify/SpotifyAuthorization';
+import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotify/authorization';
 import LoadingPage from '../loading-page/LoadingPage';
 
 import "./FromPage.css";
 import MusicData from '../../components/music-data/MusicData';
+import { SPOTIFY } from '../../Constants';
 
 /**
  * Page where user authorizes and selects songs/playlists/etc they want to swap over.
@@ -21,7 +22,7 @@ const FromPage: React.FC = () => {
     // );
 
     const { accessToken, fromService, toService, setAccessToken, setFromService, setToService } = useContext(Context);
-    const [spotifyData, setSpotifyData] = useState<Object | null>(null);
+    const [musicData, setMusicData] = useState<Object | null>(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
@@ -35,17 +36,23 @@ const FromPage: React.FC = () => {
 
         const fetchData = async () => {
             try {
-                const code = new URLSearchParams(window.location.search).get('code')
-                if (code) {
-                    setIsLoading(true);
-                    const token = await getSpotifyAccessToken(code);
-                    if (token) {
-                        setAccessToken(token);
-                        const data = await fetchSpotifyData(token);
-                        setSpotifyData(data);
-                    }
-                    setIsLoading(false);
+                setIsLoading(true);
+
+                switch (localStorage.getItem('fromService')) {
+                    case SPOTIFY:
+                        const code = new URLSearchParams(window.location.search).get('code')
+                        if (code) {
+                            const token = await getSpotifyAccessToken(code);
+                            if (token) {
+                                setAccessToken(token);
+                                const data = await fetchSpotifyData(token);
+                                setMusicData(data);
+                            }
+                        }
+                        break;
                 }
+
+                setIsLoading(false);
             } catch (exception) {
                 console.log('catch exception: ' + exception)
                 setIsError(true);
@@ -54,7 +61,8 @@ const FromPage: React.FC = () => {
         };
 
         fetchData();
-    }, [setAccessToken, setFromService, setToService])
+    }, [setAccessToken, setFromService, setToService]);
+
 
     if (isError) {
         return <ErrorPage errorDescription='Something went wrong while accessing your music library &#x1F914; &#x1F9D0;' />;
@@ -81,7 +89,7 @@ const FromPage: React.FC = () => {
     }
 
     // Access granted, show the users library
-    console.log('spotify data: ' + JSON.stringify(spotifyData))
+    console.log('spotify data: ' + JSON.stringify(musicData))
     return (
         <div className="from-page" >
             {/* <p className="text-block">Successfully authorized {JSON.stringify(spotifyData)}</p> */}

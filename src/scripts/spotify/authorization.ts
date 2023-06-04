@@ -23,6 +23,11 @@ export const redirectToSpotifyLogin = () => {
     window.location.href = `https://accounts.spotify.com/authorize?${queries}`;
 };
 
+
+export const readFromSpotifyFlow = async () => {
+
+}
+
 /**
  * 
  * @param authorizationCode authorization code returned from redirectToSpotifyLogin access grant.

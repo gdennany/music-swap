@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { SERVICES } from '../../Constants';
+
 import './StreamingServiceButtons.css';
 
 type MyCallbackType = (serviceName: string) => void;
@@ -6,8 +8,6 @@ type MyCallbackType = (serviceName: string) => void;
 interface MyComponentProps {
     serviceCallback: MyCallbackType;
 }
-
-const SERVICES = ["Amazon", "Apple", "Spotify", "Tidal"];
 
 /**
  * Renders the streaming service buttons on the ServiceSelectionPage.tsx.

@@ -1,4 +1,6 @@
-import { redirectToSpotifyLogin } from '../../scripts/spotify/SpotifyAuthorization';
+import { SPOTIFY } from '../../Constants';
+import { redirectToSpotifyLogin } from '../../scripts/spotify/authorization';
+import ErrorPage from '../error-page/ErrorPage';
 import './AuthorizationButton.css';
 
 
@@ -13,7 +15,13 @@ interface MyComponentProps {
 const AuthorizationButton: React.FC<MyComponentProps> = ({ serviceName }) => {
 
     const handleClick = (serviceName: string) => {
-        redirectToSpotifyLogin();
+        switch (serviceName) {
+            case SPOTIFY:
+                redirectToSpotifyLogin();
+                break;
+            default:
+                return <ErrorPage errorDescription='Something went wrong.' />;
+        }
     };
 
     return (
