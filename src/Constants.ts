@@ -12,8 +12,15 @@ export interface SongInterface {
     audio: string;
 };
 
+export interface AlbumInterface {
+    title: string;
+    artistName: string;
+    coverArt: string;
+    songsList: SongInterface[];
+};
+
 export interface MusicDataInterface {
     'likedSongs': SongInterface[];
-    'albums': any;
+    'albums': AlbumInterface[];
     'playlists': any;
 }

@@ -2,7 +2,7 @@ import axios from 'axios';
 import queryString from 'query-string';
 
 import { client_id, client_secret, redirect_uri } from '../../private';
-import { MusicDataInterface, SongInterface } from '../../Constants';
+import { AlbumInterface, MusicDataInterface, SongInterface } from '../../Constants';
 
 /**
  * Request access to users spotify data. Callback returns an authorizationCode in the URL.
@@ -78,7 +78,7 @@ export const fetchSpotifyData = async (accessToken: string) => {
 
         // Spotify API returns only 50 items at a time. You must call the "next" endpoint untile there is no next endpoint
         // to get all of the users data.
-        //Commenting out during development => only getting first page of data so its quicker and not as intensive on the API
+        // Commenting out during development => only getting first page of data so its quicker and not as intensive on the API
         // if (data.next) {
         //     const nextPageData = await callEndpoint(accessToken, data.next, true);
         //     data.items = [...data.items, ...nextPageData.items];
@@ -91,16 +91,10 @@ export const fetchSpotifyData = async (accessToken: string) => {
     const albums = await callEndpoint(accessToken, 'albums');
     const playlists = await callEndpoint(accessToken, 'playlists');
 
-    // let spotyifyData = {
-    //     'likedSongs': likedSongs,
-    //     'albums': albums,
-    //     'playlists': playlists
-    // } as MusicDataInterface;
-
     return parseSpotifyData(likedSongs, albums, playlists);
 };
 
-const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any) => {
+const parseSpotifyData = (likedSongs: any, albums: any, playlists: any) => {
 
     likedSongs = likedSongs.items.map((song: any) => {
         const { album, name, artists, preview_url } = song.track;
@@ -112,7 +106,19 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any) =>
         } as SongInterface;
     });
 
-    console.log(JSON.stringify(likedSongs))
+    console.log(JSON.stringify(albums))
+
+    albums = albums.items.map((album: any) => {
+        const { name, artists, images, tracks } = album.album;
+        return {
+            title: name,
+            artistName: artists[0].name,
+            coverArt: images[0].url,
+            songsList: parseSongsFromAlbum(tracks, images[0].url),
+        } as AlbumInterface;
+    });
+
+    // console.log(JSON.stringify(albums))
 
     let spotyifyData = {
         'likedSongs': likedSongs,
@@ -122,3 +128,15 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any) =>
 
     return spotyifyData;
 }
+function parseSongsFromAlbum(tracks: any, coverArt: string): SongInterface[] {
+    return tracks.items.map((song: any) => {
+        const { album, name, artists, preview_url } = song;
+        return {
+            title: name,
+            artistName: artists[0].name,
+            coverArt: coverArt,
+            audio: preview_url,
+        } as SongInterface;
+    })
+}
+

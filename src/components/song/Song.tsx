@@ -1,19 +1,33 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { AlbumInterface, SongInterface } from '../../Constants';
+import { isEmptyString } from '../../helpers/helpers';
+import SongListModal from '../song-list-modal/SongListModal';
 
 import './Song.css';
-import { SongInterface } from '../../Constants';
 
 
 interface SongProps {
-    song: SongInterface;
+    song: SongInterface | AlbumInterface;
+    isSelectable: boolean
 }
 
-const Song: React.FC<SongProps> = ({ song }) => {
-    const { title, artistName, coverArt, audio } = song;
-
+const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
+    const [isSongListModalOpen, setIsSongListModalOpen] = useState(false);
     const [playAudio, setPlayAudio] = useState<HTMLAudioElement | null>(null);
+
+    const { title, artistName, coverArt } = song;
+    let audio = '';
+    let songsList: SongInterface[] = [];
+
+    if ('audio' in song) {
+        audio = song.audio;
+    }
+    if ('songsList' in song) {
+        songsList = song.songsList;
+    }
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -38,9 +52,19 @@ const Song: React.FC<SongProps> = ({ song }) => {
         setIsChecked(!isChecked);
     };
 
+    const openModal = () => {
+        setIsSongListModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsSongListModalOpen(false);
+    };
+
     return (
         <div className="songContainer">
-            <input type="checkbox" />
+            {isSelectable
+                ? <input type="checkbox" />
+                : null}
             <img
                 className="songImage"
                 src={coverArt}
@@ -50,9 +74,17 @@ const Song: React.FC<SongProps> = ({ song }) => {
                 <h3>{title}</h3>
                 <p>{artistName}</p>
             </div>
-            <button className="playButton" onClick={togglePlay}>
-                {isPlaying ? '\u23F8' : '\u25B6'}
-            </button>
+            {!isEmptyString(audio)
+                ?
+                <button className="playButton" onClick={togglePlay}>
+                    {isPlaying ? '\u23F8' : '\u25B6'}
+                </button>
+                :
+                <div>
+                    <button onClick={openModal}>Show Songs</button>
+                    <SongListModal isOpen={isSongListModalOpen} onRequestClose={closeModal} songs={songsList} />
+                </div>
+            }
         </div>
     );
 };
