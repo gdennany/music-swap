@@ -65,7 +65,7 @@ const FromPage: React.FC = () => {
     }
 
     if (isLoading) {
-        return <LoadingPage />;;
+        return <LoadingPage />;
     }
 
     // Props not properly set => show error page
@@ -88,7 +88,6 @@ const FromPage: React.FC = () => {
     if (musicData !== null) {
         return (
             <div className="from-page" >
-                {/* <p className="text-block">Successfully authorized {JSON.stringify(spotifyData)}</p> */}
                 <MusicData musicData={musicData} />
             </div>
         );

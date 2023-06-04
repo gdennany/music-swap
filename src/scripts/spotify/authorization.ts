@@ -2,7 +2,7 @@ import axios from 'axios';
 import queryString from 'query-string';
 
 import { client_id, client_secret, redirect_uri } from '../../private';
-import { MusicDataInterface } from '../../Constants';
+import { MusicDataInterface, SongInterface } from '../../Constants';
 
 /**
  * Request access to users spotify data. Callback returns an authorizationCode in the URL.
@@ -91,6 +91,29 @@ export const fetchSpotifyData = async (accessToken: string) => {
     const albums = await callEndpoint(accessToken, 'albums');
     const playlists = await callEndpoint(accessToken, 'playlists');
 
+    // let spotyifyData = {
+    //     'likedSongs': likedSongs,
+    //     'albums': albums,
+    //     'playlists': playlists
+    // } as MusicDataInterface;
+
+    return parseSpotifyData(likedSongs, albums, playlists);
+};
+
+const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any) => {
+
+    likedSongs = likedSongs.items.map((song: any) => {
+        const { album, name, artists, preview_url } = song.track;
+        return {
+            title: name,
+            artistName: artists[0].name,
+            coverArt: album.images[0].url,
+            audio: preview_url,
+        } as SongInterface;
+    });
+
+    console.log(JSON.stringify(likedSongs))
+
     let spotyifyData = {
         'likedSongs': likedSongs,
         'albums': albums,
@@ -98,4 +121,4 @@ export const fetchSpotifyData = async (accessToken: string) => {
     } as MusicDataInterface;
 
     return spotyifyData;
-};
+}

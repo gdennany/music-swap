@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Accordion from "../accordian/Accordian";
 import SearchBar from "../search-bar/SearchBar";
 import SelectAll from "../select-all/SelectAll";
-import { MusicDataInterface } from "../../Constants";
+import { MusicDataInterface, SongInterface } from "../../Constants";
 
 import './MusicData.css';
 import Song from "../song/Song";
@@ -25,12 +25,14 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
         console.log(`SelectAll Checkbox is now ${checked ? "checked" : "unchecked"}`);
     };
 
+    // console.log(JSON.stringify(musicData.albums.items[0]))
+
     return (
         <div className="music-data-page">
             <Accordion title="&#x1F3B5;   Songs">
                 <SearchBar placeholder={'Search for songs by title or artist name'} onSearchTermChange={handleSearchTermChange} />
                 <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
-                {musicData.likedSongs.items.map((song: any, index: number) => (
+                {musicData.likedSongs.map((song: SongInterface, index: number) => (
                     <Song key={index} song={song} />
                 ))}
             </Accordion>

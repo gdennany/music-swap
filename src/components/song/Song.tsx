@@ -1,33 +1,34 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import './Song.css';
+import { SongInterface } from '../../Constants';
 
 
 interface SongProps {
-    song: any;
+    song: SongInterface;
 }
 
 const Song: React.FC<SongProps> = ({ song }) => {
-    const { album, name, artists } = song.track;
+    const { title, artistName, coverArt, audio } = song;
 
     const [isPlaying, setIsPlaying] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
-    const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+    const [playAudio, setPlayAudio] = useState<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (!audio) {
-            const newAudio = new Audio(song.track.preview_url);
-            setAudio(newAudio);
+        if (!playAudio) {
+            const newAudio = new Audio(audio);
+            setPlayAudio(newAudio);
         }
     }, []);
 
 
     const togglePlay = () => {
         if (isPlaying) {
-            audio?.pause();
+            playAudio?.pause();
         } else {
-            audio?.play();
+            playAudio?.play();
         }
 
         setIsPlaying(!isPlaying);
@@ -42,12 +43,12 @@ const Song: React.FC<SongProps> = ({ song }) => {
             <input type="checkbox" />
             <img
                 className="songImage"
-                src={album.images[0].url}
-                alt={name}
+                src={coverArt}
+                alt={title}
             />
             <div className="songInfo">
-                <h3>{name}</h3>
-                <p>{artists[0].name}</p>
+                <h3>{title}</h3>
+                <p>{artistName}</p>
             </div>
             <button className="playButton" onClick={togglePlay}>
                 {isPlaying ? '\u23F8' : '\u25B6'}
