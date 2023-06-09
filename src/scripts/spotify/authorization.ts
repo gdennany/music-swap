@@ -34,6 +34,7 @@ export const readFromSpotifyFlow = async () => {
  * @param authorizationCode authorization code returned from redirectToSpotifyLogin access grant.
  */
 export async function getSpotifyAccessToken(authorizationCode: string) {
+    console.log('in getSpotifyAccessToken')
     try {
         const response = await axios.post('https://accounts.spotify.com/api/token',
             new URLSearchParams({
@@ -77,7 +78,7 @@ export const fetchSpotifyData = async (accessToken: string) => {
 
         // Spotify API returns only 50 items at a time. You must call the "next" endpoint untile there is no next endpoint
         // to get all of the users data.
-        // Commenting out during development => only getting first page of data so its quicker and not as intensive on the API
+        // TODO Commenting out during development => only getting first page of data so its quicker and not as intensive on the API
         // if (data.next) {
         //     const nextPageData = await callEndpoint(accessToken, data.next, true);
         //     data.items = [...data.items, ...nextPageData.items];
@@ -116,7 +117,6 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
     });
 
     playlists = await Promise.all(playlists.items.map(async (playlist: any) => {
-        //TODO get all songs in a playlist past 100 item limit
         const getPlaylistSongs = async (url: string) => {
             const response = await axios.get(url, {
                 headers: {
@@ -125,6 +125,7 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
             });
             const data = response.data;
 
+            //TODO Commenting out during development => only getting first page of data so its quicker and not as intensive on the API
             // if (data.next) {
             //     const nextPageData = await getPlaylistSongs(data.next);
             //     data.items = [...data.items, ...nextPageData.items];
@@ -133,18 +134,16 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
             return data;
         }
 
-        const tracks = await getPlaylistSongs(playlist.tracks.href)
+        const tracks = await getPlaylistSongs(playlist.tracks.href);
 
         return {
             title: playlist.name,
             coverArt: playlist.images[0].url,
             //TODO: getting playlist songs not working
-            // songsList: parseSongsFromPlaylist(tracks),
-            songsList: [],
+            songsList: parseSongsFromPlaylist(tracks),
+            // songsList: [],
         } as PlaylistInterface;
     }));
-
-    console.log(JSON.stringify(playlists))
 
     let spotyifyData = {
         'likedSongs': likedSongs,
@@ -156,7 +155,7 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
 }
 function parseSongsFromAlbum(tracks: any, coverArt: string): SongInterface[] {
     return tracks.items.map((song: any) => {
-        const { album, name, artists, preview_url } = song;
+        const { name, artists, preview_url } = song;
         return {
             title: name,
             artistName: artists[0].name,
@@ -168,27 +167,28 @@ function parseSongsFromAlbum(tracks: any, coverArt: string): SongInterface[] {
 
 function parseSongsFromPlaylist(tracks: any): SongInterface[] {
     return tracks.items.map((song: any) => {
+
+        if (!song.track || !song.track.album) {
+            return {
+                title: 'Unknown title',
+                artistName: 'Unknown artist',
+                coverArt: '',
+                audio: '',
+            } as SongInterface;
+        }
+
         const album = song.track?.album ?? {};
         const name = song.track?.name ?? '';
         const artists = song.track?.artists ?? [{}];
         const preview_url = song.track?.preview_url ?? '';
 
-        const temp = {
+        return {
             title: name,
             //TODO: albumName
             artistName: artists[0].name ?? 'Unknown artist',
-            coverArt: album.images[0]?.url ?? 'default_image_url', // replace 'default_image_url' with the actual default image URL
+            coverArt: album.images[0]?.url ?? '',
             audio: preview_url,
         } as SongInterface;
-
-        return temp;
-        // return {
-        //     title: name,
-        //     //TODO: albumName
-        //     artistName: artists[0].name ?? 'Unknown artist',
-        //     coverArt: album.images[0]?.url ?? 'default_image_url', // replace 'default_image_url' with the actual default image URL
-        //     audio: preview_url,
-        // } as SongInterface;
     })
 }
 

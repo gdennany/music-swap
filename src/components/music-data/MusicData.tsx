@@ -27,8 +27,6 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
         console.log(`SelectAll Checkbox is now ${checked ? "checked" : "unchecked"}`);
     };
 
-    // console.log(JSON.stringify(musicData.albums.items[0]))
-
     return (
         <div className="music-data-page">
             <Accordion title="&#x1F3B5;   Songs">

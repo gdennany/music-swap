@@ -29,6 +29,7 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
         if (isPlaying) {
             playAudio?.pause();
         } else {
+            playAudio?.pause();
             playAudio?.play();
         }
 
