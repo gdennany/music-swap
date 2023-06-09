@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Accordion from "../accordian/Accordian";
 import SearchBar from "../search-bar/SearchBar";
 import SelectAll from "../select-all/SelectAll";
-import { AlbumInterface, MusicDataInterface, SongInterface } from "../../Constants";
+import { AlbumInterface, MusicDataInterface, PlaylistInterface, SongInterface } from "../../Constants";
 
 import './MusicData.css';
 import Song from "../song/Song";
@@ -39,9 +39,6 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
             <Accordion title="&#x1F4BF;   Albums">
                 <SearchBar placeholder={'Search for albums by title or artist name'} onSearchTermChange={handleSearchTermChange} />
                 <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
-                {/* <Accordion title="Album 1">
-                    <p>Content for Album 1</p>
-                </Accordion> */}
                 {musicData.albums.map((album: AlbumInterface, index: number) => (
                     <Song key={index} song={album} isSelectable={true} />
                 ))}
@@ -50,12 +47,9 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
             <Accordion title="&#x1F4CB;   Playlists">
                 <SearchBar placeholder={'Search for playlists title'} onSearchTermChange={handleSearchTermChange} />
                 <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
-                <Accordion title="Playlist 1">
-                    <p>Content for Playlist 1</p>
-                </Accordion>
-                <Accordion title="Playlist 2">
-                    <p>Content for Playlist 2</p>
-                </Accordion>
+                {/* {musicData.playlists.map((playlist: PlaylistInterface, index: number) => (
+                    <Song key={index} song={playlist} isSelectable={true} />
+                ))} */}
             </Accordion>
         </div>
     );

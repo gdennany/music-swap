@@ -2,7 +2,7 @@ import axios from 'axios';
 import queryString from 'query-string';
 
 import { client_id, client_secret, redirect_uri } from '../../private';
-import { AlbumInterface, MusicDataInterface, SongInterface } from '../../Constants';
+import { AlbumInterface, MusicDataInterface, PlaylistInterface, SongInterface } from '../../Constants';
 
 /**
  * Request access to users spotify data. Callback returns an authorizationCode in the URL.
@@ -65,7 +65,6 @@ export async function getSpotifyAccessToken(authorizationCode: string) {
 export const fetchSpotifyData = async (accessToken: string) => {
 
     const callEndpoint = async (accessToken: string, url: string, isFullUrl = false) => {
-        console.log('fetching!')
         const fullUrl = isFullUrl ? url : `https://api.spotify.com/v1/me/${url}?limit=50`;
 
         const response = await axios.get(fullUrl, {
@@ -91,10 +90,10 @@ export const fetchSpotifyData = async (accessToken: string) => {
     const albums = await callEndpoint(accessToken, 'albums');
     const playlists = await callEndpoint(accessToken, 'playlists');
 
-    return parseSpotifyData(likedSongs, albums, playlists);
+    return parseSpotifyData(likedSongs, albums, playlists, accessToken);
 };
 
-const parseSpotifyData = (likedSongs: any, albums: any, playlists: any) => {
+const parseSpotifyData = (likedSongs: any, albums: any, playlists: any, accessToken: string) => {
 
     likedSongs = likedSongs.items.map((song: any) => {
         const { album, name, artists, preview_url } = song.track;
@@ -106,8 +105,7 @@ const parseSpotifyData = (likedSongs: any, albums: any, playlists: any) => {
         } as SongInterface;
     });
 
-    console.log(JSON.stringify(albums))
-
+    // console.log(JSON.stringify(albums))
     albums = albums.items.map((album: any) => {
         const { name, artists, images, tracks } = album.album;
         return {
@@ -118,7 +116,36 @@ const parseSpotifyData = (likedSongs: any, albums: any, playlists: any) => {
         } as AlbumInterface;
     });
 
-    // console.log(JSON.stringify(albums))
+    // console.log(JSON.stringify(playlists))
+
+    playlists = playlists.items.map(async (playlist: any) => {
+
+        const getPlaylistSongs = async (url: string) => {
+            const response = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            const data = response.data;
+
+            if (data.next) {
+                const nextPageData = await getPlaylistSongs(data.next);
+                data.items = [...data.items, ...nextPageData.items];
+            }
+
+            return data;
+        }
+
+        const tracks = await getPlaylistSongs(playlist.href)
+
+        return {
+            title: playlist.name,
+            coverArt: playlist.images[0].url,
+            songsList: parseSongsFromAlbum(tracks, ''),
+        } as PlaylistInterface;
+    });
+
 
     let spotyifyData = {
         'likedSongs': likedSongs,

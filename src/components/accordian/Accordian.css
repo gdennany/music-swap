@@ -1,7 +1,10 @@
 .accordion-section {
     margin: 1em;
     max-height: 80vh;
+    max-width: 80vw;
+    align-items: center;
     overflow-y: scroll;
+    padding-bottom: 10px;
 }
 
 .accordion {

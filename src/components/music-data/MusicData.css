@@ -2,4 +2,5 @@
     min-width: 90vw;
     max-width: 95vw;
     min-height: 100vh;
+    overflow: visible;
 }
