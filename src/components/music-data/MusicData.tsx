@@ -6,6 +6,8 @@ import { AlbumInterface, MusicDataInterface, PlaylistInterface, SongInterface } 
 
 import './MusicData.css';
 import Song from "../song/Song";
+import Album from "../album/Album";
+import Playlist from "../playlist/Playlist";
 
 interface MusicDataProps {
     musicData: MusicDataInterface;
@@ -40,16 +42,16 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
                 <SearchBar placeholder={'Search for albums by title or artist name'} onSearchTermChange={handleSearchTermChange} />
                 <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
                 {musicData.albums.map((album: AlbumInterface, index: number) => (
-                    <Song key={index} song={album} isSelectable={true} />
+                    <Album key={index} album={album} isSelectable={true} />
                 ))}
 
             </Accordion>
             <Accordion title="&#x1F4CB;   Playlists">
                 <SearchBar placeholder={'Search for playlists title'} onSearchTermChange={handleSearchTermChange} />
                 <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
-                {/* {musicData.playlists.map((playlist: PlaylistInterface, index: number) => (
-                    <Song key={index} song={playlist} isSelectable={true} />
-                ))} */}
+                {musicData.playlists.map((playlist: PlaylistInterface, index: number) => (
+                    <Playlist key={index} playlist={playlist} isSelectable={true} />
+                ))}
             </Accordion>
         </div>
     );

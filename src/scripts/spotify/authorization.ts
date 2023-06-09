@@ -93,7 +93,7 @@ export const fetchSpotifyData = async (accessToken: string) => {
     return parseSpotifyData(likedSongs, albums, playlists, accessToken);
 };
 
-const parseSpotifyData = (likedSongs: any, albums: any, playlists: any, accessToken: string) => {
+const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, accessToken: string) => {
 
     likedSongs = likedSongs.items.map((song: any) => {
         const { album, name, artists, preview_url } = song.track;
@@ -105,7 +105,6 @@ const parseSpotifyData = (likedSongs: any, albums: any, playlists: any, accessTo
         } as SongInterface;
     });
 
-    // console.log(JSON.stringify(albums))
     albums = albums.items.map((album: any) => {
         const { name, artists, images, tracks } = album.album;
         return {
@@ -116,36 +115,36 @@ const parseSpotifyData = (likedSongs: any, albums: any, playlists: any, accessTo
         } as AlbumInterface;
     });
 
-    // console.log(JSON.stringify(playlists))
-
-    playlists = playlists.items.map(async (playlist: any) => {
-
+    playlists = await Promise.all(playlists.items.map(async (playlist: any) => {
+        //TODO get all songs in a playlist past 100 item limit
         const getPlaylistSongs = async (url: string) => {
             const response = await axios.get(url, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             });
-
             const data = response.data;
 
-            if (data.next) {
-                const nextPageData = await getPlaylistSongs(data.next);
-                data.items = [...data.items, ...nextPageData.items];
-            }
+            // if (data.next) {
+            //     const nextPageData = await getPlaylistSongs(data.next);
+            //     data.items = [...data.items, ...nextPageData.items];
+            // }
 
             return data;
         }
 
-        const tracks = await getPlaylistSongs(playlist.href)
+        const tracks = await getPlaylistSongs(playlist.tracks.href)
 
         return {
             title: playlist.name,
             coverArt: playlist.images[0].url,
-            songsList: parseSongsFromAlbum(tracks, ''),
+            //TODO: getting playlist songs not working
+            // songsList: parseSongsFromPlaylist(tracks),
+            songsList: [],
         } as PlaylistInterface;
-    });
+    }));
 
+    console.log(JSON.stringify(playlists))
 
     let spotyifyData = {
         'likedSongs': likedSongs,
@@ -164,6 +163,32 @@ function parseSongsFromAlbum(tracks: any, coverArt: string): SongInterface[] {
             coverArt: coverArt,
             audio: preview_url,
         } as SongInterface;
+    })
+}
+
+function parseSongsFromPlaylist(tracks: any): SongInterface[] {
+    return tracks.items.map((song: any) => {
+        const album = song.track?.album ?? {};
+        const name = song.track?.name ?? '';
+        const artists = song.track?.artists ?? [{}];
+        const preview_url = song.track?.preview_url ?? '';
+
+        const temp = {
+            title: name,
+            //TODO: albumName
+            artistName: artists[0].name ?? 'Unknown artist',
+            coverArt: album.images[0]?.url ?? 'default_image_url', // replace 'default_image_url' with the actual default image URL
+            audio: preview_url,
+        } as SongInterface;
+
+        return temp;
+        // return {
+        //     title: name,
+        //     //TODO: albumName
+        //     artistName: artists[0].name ?? 'Unknown artist',
+        //     coverArt: album.images[0]?.url ?? 'default_image_url', // replace 'default_image_url' with the actual default image URL
+        //     audio: preview_url,
+        // } as SongInterface;
     })
 }
 

@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import { AlbumInterface } from '../../Constants';
+import { PlaylistInterface } from '../../Constants';
 import SongListModal from '../song-list-modal/SongListModal';
 
-import './Album.css';
+import './Playlist.css';
 
 
-interface AlbumProps {
-    album: AlbumInterface;
+interface PlaylistProps {
+    playlist: PlaylistInterface;
     isSelectable: boolean
 }
 
-const Album: React.FC<AlbumProps> = ({ album, isSelectable }) => {
+const Playlist: React.FC<PlaylistProps> = ({ playlist, isSelectable }) => {
     const [isChecked, setIsChecked] = useState(false);
     const [isSongListModalOpen, setIsSongListModalOpen] = useState(false);
 
-    const { title, artistName, coverArt, songsList } = album;
+    const { title, coverArt, songsList } = playlist;
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
@@ -38,7 +38,6 @@ const Album: React.FC<AlbumProps> = ({ album, isSelectable }) => {
             />
             <div className="albumInfo">
                 <h3>{title}</h3>
-                <p>{artistName}</p>
             </div>
             <div>
                 <button onClick={openModal}>Show Songs</button>
@@ -48,4 +47,4 @@ const Album: React.FC<AlbumProps> = ({ album, isSelectable }) => {
     );
 };
 
-export default Album;
+export default Playlist;
