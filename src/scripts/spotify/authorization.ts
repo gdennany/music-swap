@@ -138,16 +138,14 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
         return {
             title: playlist.name,
             coverArt: playlist.images[0].url,
-            //TODO: getting playlist songs not working
             songsList: parseSongsFromPlaylist(tracks),
-            // songsList: [],
         } as PlaylistInterface;
     }));
 
     let spotyifyData = {
-        'likedSongs': likedSongs,
-        'albums': albums,
-        'playlists': playlists
+        likedSongs,
+        albums,
+        playlists
     } as MusicDataInterface;
 
     return spotyifyData;

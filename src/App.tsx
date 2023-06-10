@@ -6,6 +6,7 @@ import ServiceSelectionPage from './screens/service-selection-page/ServiceSelect
 
 import './App.css';
 import { ContextProvider } from './Context';
+import ErrorPage from './components/error-page/ErrorPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
               </>
             } />
             <Route path="/fromServiceSelection" element={<FromPage />} />
+            <Route path="*" element={<ErrorPage errorDescription="Unrecognized URL" />} />
           </Routes>
         </div>
       </Router>

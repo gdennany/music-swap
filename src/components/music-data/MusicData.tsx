@@ -40,7 +40,7 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
                 <SearchBar placeholder={'Search for albums by title or artist name'} onSearchTermChange={handleSearchTermChange} />
                 <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
                 {musicData.albums.map((album: AlbumInterface, index: number) => (
-                    <Album key={index} album={album} isSelectable={true} />
+                    <Album key={index} album={album} />
                 ))}
 
             </Accordion>
@@ -48,7 +48,7 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
                 <SearchBar placeholder={'Search for playlists title'} onSearchTermChange={handleSearchTermChange} />
                 <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
                 {musicData.playlists.map((playlist: PlaylistInterface, index: number) => (
-                    <Playlist key={index} playlist={playlist} isSelectable={true} />
+                    <Playlist key={index} playlist={playlist} />
                 ))}
             </Accordion>
         </div>

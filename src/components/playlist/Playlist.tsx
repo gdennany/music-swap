@@ -7,17 +7,25 @@ import './Playlist.css';
 
 interface PlaylistProps {
     playlist: PlaylistInterface;
-    isSelectable: boolean
 }
 
-const Playlist: React.FC<PlaylistProps> = ({ playlist, isSelectable }) => {
+const Playlist: React.FC<PlaylistProps> = ({ playlist }) => {
     const [isChecked, setIsChecked] = useState(false);
     const [isSongListModalOpen, setIsSongListModalOpen] = useState(false);
 
     const { title, coverArt, songsList } = playlist;
 
     const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
+        const newCheckedState = !isChecked;
+        setIsChecked(newCheckedState);
+        // user selected this for swap
+        if (newCheckedState) {
+            console.log('adding')
+        }
+        //user deselected this for swap
+        else {
+            console.log('removing')
+        }
     };
 
     const openModal = () => {
@@ -30,7 +38,11 @@ const Playlist: React.FC<PlaylistProps> = ({ playlist, isSelectable }) => {
 
     return (
         <div className="albumContainer">
-            <input type="checkbox" />
+            <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+            />
             <img
                 className="albumImage"
                 src={coverArt}

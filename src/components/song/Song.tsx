@@ -7,7 +7,11 @@ import { Context } from '../../Context';
 
 interface SongProps {
     song: SongInterface;
-    isSelectable: boolean
+    // Tells whether or not a song should have a checkbox next to it. For playlist and albums,
+    // Songs are displayed in a modal for informational purposes only, and the user cannot select a single
+    // song from an album.
+    isSelectable: boolean,
+    // isSelectedForSwap: boolean
 }
 
 const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
@@ -15,7 +19,7 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
     const [isChecked, setIsChecked] = useState(false);
     const [playAudio, setPlayAudio] = useState<HTMLAudioElement | null>(null);
 
-    const { playingAudio, setPlayingAudio } = useContext(Context);
+    const { playingAudio, setPlayingAudio, selectedSongs, addToSelectedSongs, removeFromSelectedSongs } = useContext(Context);
     const { title, artistName, coverArt, audio } = song;
 
     useEffect(() => {
@@ -51,13 +55,35 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
     }, [playingAudio]);
 
     const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
+        const newCheckedState = !isChecked;
+        setIsChecked(newCheckedState);
+        // user selected this for swap
+        if (newCheckedState) {
+            addToSelectedSongs({
+                title,
+                artistName,
+            })
+
+        }
+        //user deselected this for swap
+        else {
+            removeFromSelectedSongs({
+                title,
+                artistName,
+            })
+        }
+
+        console.log(JSON.stringify(selectedSongs))
     };
 
     return (
         <div className="songContainer">
             {isSelectable
-                ? <input type="checkbox" />
+                ? <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                />
                 : null}
             <img
                 className="songImage"
