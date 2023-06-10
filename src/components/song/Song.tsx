@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SongInterface } from '../../Constants';
 
 import './Song.css';
+import { Context } from '../../Context';
 
 
 interface SongProps {
@@ -14,6 +15,7 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
     const [isChecked, setIsChecked] = useState(false);
     const [playAudio, setPlayAudio] = useState<HTMLAudioElement | null>(null);
 
+    const { playingAudio, setPlayingAudio } = useContext(Context);
     const { title, artistName, coverArt, audio } = song;
 
     useEffect(() => {
@@ -29,12 +31,24 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
         if (isPlaying) {
             playAudio?.pause();
         } else {
-            playAudio?.pause();
+            // If there is any playing audio, pause it
+            if (playingAudio) {
+                playingAudio.pause();
+            }
+            // Play the new audio and set it as the current playing audio
             playAudio?.play();
+            setPlayingAudio(playAudio);
         }
-
         setIsPlaying(!isPlaying);
     };
+
+    useEffect(() => {
+        // Pause this audio if it's not the current playing audio
+        if (playingAudio !== playAudio && isPlaying) {
+            playAudio?.pause();
+            setIsPlaying(false);
+        }
+    }, [playingAudio]);
 
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked);

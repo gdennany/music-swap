@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { SongInterface } from '../../Constants';
 import Song from '../song/Song';
 
 import "./SongListModal.css";
+import { Context } from '../../Context';
 
 interface SongListModalProps {
     isOpen: boolean;
@@ -11,12 +12,23 @@ interface SongListModalProps {
 }
 
 const SongListModal: React.FC<SongListModalProps> = ({ isOpen, onRequestClose, songs }) => {
+    const { playingAudio, setPlayingAudio } = useContext(Context);
+
     if (!isOpen) return null;
 
     return (
         <div className="modalOverlay">
             <div className="modal">
-                <button className="close-button" onClick={onRequestClose}>X</button>
+                <button
+                    className="close-button"
+                    onClick={() => {
+                        playingAudio?.pause();
+                        setPlayingAudio(null);
+                        onRequestClose();
+                    }}
+                >
+                    X
+                </button>
                 <h2>Songs</h2>
                 <ul>
                     {songs.map((song, index) => (

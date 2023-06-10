@@ -34,7 +34,6 @@ export const readFromSpotifyFlow = async () => {
  * @param authorizationCode authorization code returned from redirectToSpotifyLogin access grant.
  */
 export async function getSpotifyAccessToken(authorizationCode: string) {
-    console.log('in getSpotifyAccessToken')
     try {
         const response = await axios.post('https://accounts.spotify.com/api/token',
             new URLSearchParams({

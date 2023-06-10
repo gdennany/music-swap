@@ -37,11 +37,13 @@ const FromPage: React.FC = () => {
                     case SPOTIFY:
                         const code = new URLSearchParams(window.location.search).get('code');
                         if (code) {
+                            await setAccessToken('test')
+
                             //TODO figure out how to re-use the same access token on page refresh 
                             const token = await getSpotifyAccessToken(code);
                             //Reset the URL to /fromServiceSelection on page refresh
-                            // const urlWithoutCode = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                            // window.history.replaceState({}, document.title, urlWithoutCode);
+                            const urlWithoutCode = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                            window.history.replaceState({}, document.title, urlWithoutCode);
                             if (token) {
                                 setAccessToken(token);
                                 const data = await fetchSpotifyData(token);
