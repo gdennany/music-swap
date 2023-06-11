@@ -3,7 +3,7 @@ import AuthorizationButton from '../../components/authorization-button/Authoriza
 import ErrorPage from '../../components/error-page/ErrorPage';
 import { Context } from '../../Context';
 import { isEmptyString } from '../../helpers/helpers';
-import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotify/authorization';
+import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotify/spotifyAPI';
 import LoadingPage from '../loading-page/LoadingPage';
 
 import "./FromPage.css";

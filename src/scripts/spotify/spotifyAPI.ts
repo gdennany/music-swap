@@ -24,11 +24,6 @@ export const redirectToSpotifyLogin = () => {
     window.location.href = `https://accounts.spotify.com/authorize?${queries}`;
 };
 
-
-export const readFromSpotifyFlow = async () => {
-
-}
-
 /**
  * 
  * @param authorizationCode authorization code returned from redirectToSpotifyLogin access grant.
@@ -133,7 +128,12 @@ const parseSpotifyData = async (songs: any, albums: any, playlists: any, accessT
             return data;
         }
 
-        const tracks = await getPlaylistSongs(playlist.tracks.href);
+        let tracks = [];
+        try {
+            tracks = await getPlaylistSongs(playlist.tracks.href);
+        } catch (error) {
+            console.log('Error in getPlaylistSongs: ' + error);
+        }
 
         return {
             title: playlist.name,
@@ -163,7 +163,7 @@ function parseSongsFromAlbum(tracks: any, coverArt: string): SongInterface[] {
 }
 
 function parseSongsFromPlaylist(tracks: any): SongInterface[] {
-    return tracks.items.map((song: any) => {
+    return tracks.items?.map((song: any) => {
 
         if (!song.track || !song.track.album) {
             return {

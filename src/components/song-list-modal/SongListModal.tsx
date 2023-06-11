@@ -16,6 +16,20 @@ const SongListModal: React.FC<SongListModalProps> = ({ isOpen, onRequestClose, s
 
     if (!isOpen) return null;
 
+    function getSongs(): React.ReactNode {
+        try {
+            return (
+                <ul>
+                    {songs.map((song, index) => (
+                        <Song key={index} song={song} isSelectable={false} />
+                    ))}
+                </ul>
+            );
+        } catch (error) {
+            return <p>Sorry, error retrieving these songs</p>
+        }
+    }
+
     return (
         <div className="modalOverlay">
             <div className="modal">
@@ -30,11 +44,7 @@ const SongListModal: React.FC<SongListModalProps> = ({ isOpen, onRequestClose, s
                     X
                 </button>
                 <h2>Songs</h2>
-                <ul>
-                    {songs.map((song, index) => (
-                        <Song key={index} song={song} isSelectable={false} />
-                    ))}
-                </ul>
+                {getSongs()}
             </div>
         </div>
 
