@@ -17,49 +17,47 @@ interface SongProps {
 const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
-    const [playAudio, setPlayAudio] = useState<HTMLAudioElement | null>(null);
+    const [clickedPlayAudio, setClickedPlayAudio] = useState<HTMLAudioElement | null>(null);
 
     const { playingAudio, setPlayingAudio, selectedSongs, addToSelectedSongs, removeFromSelectedSongs } = useContext(Context);
     const { title, artistName, coverArt, audio } = song;
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (!playAudio) {
+        if (!clickedPlayAudio) {
             const newAudio = new Audio(audio);
-            setPlayAudio(newAudio);
+            setClickedPlayAudio(newAudio);
         }
-    }, []);
 
-
-    const togglePlay = () => {
-        if (isPlaying) {
-            playAudio?.pause();
-        } else {
-            // If there is any playing audio, pause it
-            if (playingAudio) {
-                playingAudio.pause();
-            }
-            // Play the new audio and set it as the current playing audio
-            playAudio?.play();
-            setPlayingAudio(playAudio);
-        }
-        setIsPlaying(!isPlaying);
-    };
-
-    useEffect(() => {
         // Pause this audio if it's not the current playing audio
-        if (playingAudio !== playAudio && isPlaying) {
-            playAudio?.pause();
+        if (playingAudio !== clickedPlayAudio && isPlaying) {
+            clickedPlayAudio?.pause();
             setIsPlaying(false);
         }
 
-        // Make sure checkbox is check for previously selected songs
+        // Make sure checkbox is checked based on selectedSongs state
         if (selectedSongs.find(s => s.title === song.title && s.artistName === song.artistName)) {
             setIsChecked(true);
         } else {
             setIsChecked(false);
         }
     }, [selectedSongs, playingAudio]);
+
+    const togglePlay = async () => {
+        console.log(song.title)
+        if (isPlaying) {
+            clickedPlayAudio?.pause();
+        } else {
+            // If there is any playing audio, pause it
+            if (playingAudio) {
+                playingAudio.pause();
+            }
+            // Play the new audio and set it as the current playing audio
+            clickedPlayAudio?.play();
+            setPlayingAudio(clickedPlayAudio);
+        }
+        setIsPlaying(!isPlaying);
+    };
 
     const handleCheckboxChange = () => {
         const newCheckedState = !isChecked;

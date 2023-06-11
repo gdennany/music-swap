@@ -84,7 +84,7 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
                 {visibleSongs
                     // Map filtered result to Song object
                     .map((song: SongInterface, index: number) => (
-                        <Song key={index} song={song} isSelectable={true} />
+                        <Song key={song.id} song={song} isSelectable={true} />
                     ))}
             </Accordion>
             <Accordion title="&#x1F4BF;   Albums">

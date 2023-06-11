@@ -91,8 +91,9 @@ export const fetchSpotifyData = async (accessToken: string) => {
 const parseSpotifyData = async (songs: any, albums: any, playlists: any, accessToken: string) => {
 
     songs = songs.items.map((song: any) => {
-        const { album, name, artists, preview_url } = song.track;
+        const { id, album, name, artists, preview_url } = song.track;
         return {
+            id: id,
             title: name,
             artistName: artists[0].name,
             coverArt: album.images[0]?.url ?? '',

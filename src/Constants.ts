@@ -7,6 +7,7 @@ export const SERVICES = [AMAZON, APPLE, SPOTIFY, TIDAL];
 
 // Data required to represent a Song component
 export interface SongInterface {
+    id: string;
     title: string;
     artistName: string;
     coverArt: string;
