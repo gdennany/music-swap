@@ -86,16 +86,16 @@ export const fetchSpotifyData = async (accessToken: string) => {
         return data;
     }
 
-    const likedSongs = await callEndpoint(accessToken, 'tracks');
+    const songs = await callEndpoint(accessToken, 'tracks');
     const albums = await callEndpoint(accessToken, 'albums');
     const playlists = await callEndpoint(accessToken, 'playlists');
 
-    return parseSpotifyData(likedSongs, albums, playlists, accessToken);
+    return parseSpotifyData(songs, albums, playlists, accessToken);
 };
 
-const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, accessToken: string) => {
+const parseSpotifyData = async (songs: any, albums: any, playlists: any, accessToken: string) => {
 
-    likedSongs = likedSongs.items.map((song: any) => {
+    songs = songs.items.map((song: any) => {
         const { album, name, artists, preview_url } = song.track;
         return {
             title: name,
@@ -143,7 +143,7 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
     }));
 
     let spotyifyData = {
-        likedSongs,
+        songs,
         albums,
         playlists
     } as MusicDataInterface;

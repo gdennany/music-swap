@@ -30,7 +30,7 @@ export interface PlaylistInterface {
 
 // How data fetched from a service should be structured to display on the Music Data Page.
 export interface MusicDataInterface {
-    likedSongs: SongInterface[];
+    songs: SongInterface[];
     albums: AlbumInterface[];
     playlists: PlaylistInterface[];
 };
