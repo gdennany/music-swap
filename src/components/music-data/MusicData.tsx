@@ -22,7 +22,7 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
     const [albumSearchTerm, setAlbumSearchTerm] = useState("");
     const [playlistSearchTerm, setPlaylistSearchTerm] = useState("");
 
-    const { selectedSongs, selectedAlbums, selectedPlaylists } = useContext(Context);
+    const { addToSelectedSongs, removeFromSelectedSongs, selectedSongs, selectedAlbums, selectedPlaylists } = useContext(Context);
 
     const songSearchChange = (searchTerm: string) => {
         setSongSearchTerm(searchTerm);
@@ -36,20 +36,52 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
         setPlaylistSearchTerm(searchTerm);
     };
 
-    const handleSelectAllChange = (checked: boolean) => {
-        console.log(`SelectAll Checkbox is now ${checked ? "checked" : "unchecked"}`);
+    const visibleSongs = musicData.songs.filter((song: SongInterface) => {
+        // Support search by Song title and Artist name
+        return (song.title.toLowerCase().includes(songSearchTerm.toLowerCase()) || song.artistName.toLowerCase().includes(songSearchTerm.toLowerCase()));
+    });
+
+    const selectAllSongsClick = () => {
+        const songsToAdd = visibleSongs.map((song: SongInterface) => {
+            return {
+                title: song.title,
+                artistName: song.artistName,
+            };
+        });
+        addToSelectedSongs(songsToAdd);
+
+        // console.log('selectedSongs: ' + JSON.stringify(selectedSongs))
     };
+
+    const removeAllSongsClick = () => {
+        const songsToRemove = visibleSongs.map((song: SongInterface) => {
+            return {
+                title: song.title,
+                artistName: song.artistName,
+            };
+        });
+        removeFromSelectedSongs(songsToRemove);
+    }
+
+    // const handleSelectAllChange = (checked: boolean) => {
+    //     console.log(`SelectAll Checkbox is now ${checked ? "checked" : "unchecked"}`);
+    // }
+    const handleSelectAllChange = () => {
+        console.log(`SelectAll Checkbox`);
+    }
 
     return (
         <div className="music-data-page">
             <Accordion title="&#x1F3B5;   Songs">
+                {/* TODO: searching not working properly (ex: search then play the song, search and select a song & remove the search) */}
                 <SearchBar placeholder={'Search for songs by title or artist name'} onSearchTermChange={songSearchChange} />
-                <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
+                <div className="select-all">
+                    <SelectAll label="Select all &#x2193;" onChecked={selectAllSongsClick} />
+                    <SelectAll label="Unselect all &#x2193;" onChecked={removeAllSongsClick} />
+                </div>
+
                 {/* filter on search term */}
-                {musicData.songs.filter((song: SongInterface) => {
-                    // Support search by Song title and Artist name
-                    return (song.title.toLowerCase().includes(songSearchTerm.toLowerCase()) || song.artistName.toLowerCase().includes(songSearchTerm.toLowerCase()));
-                })
+                {visibleSongs
                     // Map filtered result to Song object
                     .map((song: SongInterface, index: number) => (
                         <Song key={index} song={song} isSelectable={true} />

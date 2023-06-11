@@ -10,7 +10,7 @@ interface SongProps {
     // Tells whether or not a song should have a checkbox next to it. For playlist and albums,
     // Songs are displayed in a modal for informational purposes only, and the user cannot select a single
     // song from an album.
-    isSelectable: boolean,
+    isSelectable: boolean;
     // isSelectedForSwap: boolean
 }
 
@@ -52,28 +52,35 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
             playAudio?.pause();
             setIsPlaying(false);
         }
-    }, [playingAudio]);
+
+        // Make sure checkbox is check for previously selected songs
+        if (selectedSongs.find(s => s.title === song.title && s.artistName === song.artistName)) {
+            setIsChecked(true);
+        } else {
+            setIsChecked(false);
+        }
+    }, [selectedSongs, playingAudio]);
 
     const handleCheckboxChange = () => {
         const newCheckedState = !isChecked;
         setIsChecked(newCheckedState);
         // user selected this for swap
         if (newCheckedState) {
-            addToSelectedSongs({
+            addToSelectedSongs([{
                 title,
                 artistName,
-            })
+            }]);
 
         }
         //user deselected this for swap
         else {
-            removeFromSelectedSongs({
+            removeFromSelectedSongs([{
                 title,
                 artistName,
-            })
+            }]);
         }
 
-        // console.log(JSON.stringify(selectedSongs))
+        console.log(JSON.stringify(selectedSongs))
     };
 
     return (

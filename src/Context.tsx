@@ -18,8 +18,10 @@ interface IContextType extends IContextState {
 	setFromService: (value: string) => void;
 	setToService: (value: string) => void;
 	setPlayingAudio: (audio: HTMLAudioElement | null) => void;
-	addToSelectedSongs: (song: SongSelectedForSwap) => void;
-	removeFromSelectedSongs: (song: SongSelectedForSwap) => void;
+	// addToSelectedSongs: (song: SongSelectedForSwap) => void;
+	addToSelectedSongs: (songs: SongSelectedForSwap[]) => void;
+	// removeFromSelectedSongs: (song: SongSelectedForSwap) => void;
+	removeFromSelectedSongs: (songs: SongSelectedForSwap[]) => void;
 	addToSelectedAlbums: (album: AlbumSelectedForSwap) => void;
 	removeFromSelectedAlbums: (album: AlbumSelectedForSwap) => void;
 	addToSelectedPlaylists: (playlist: PlaylistSelectedForSwap) => void;
@@ -61,13 +63,23 @@ export const ContextProvider: React.FC<ContextProviderProps> = ({ children }) =>
 	const [selectedAlbums, setSelectedAlbums] = React.useState<AlbumSelectedForSwap[]>([]);
 	const [selectedPlaylists, setSelectedPlaylists] = React.useState<PlaylistSelectedForSwap[]>([]);
 
-	const addToSelectedSongs = (song: SongSelectedForSwap) => {
-		setSelectedSongs([...selectedSongs, song]);
+	const addToSelectedSongs = (songs: SongSelectedForSwap[]) => {
+		setSelectedSongs(prevSongs => {
+			// Only add songs which were not previously selected
+			const existingSongMap = new Map(prevSongs.map(song => [song.title + song.artistName, song]));
+			const uniqueNewSongs = songs.filter(song => !existingSongMap.has(song.title + song.artistName));
+
+			return [...prevSongs, ...uniqueNewSongs];
+		});
 	};
 
-	const removeFromSelectedSongs = (song: SongSelectedForSwap) => {
-		// Remove only the song that matches both the title and artist name of the song argument
-		setSelectedSongs(selectedSongs.filter(s => !(s.title === song.title && s.artistName === song.artistName)));
+	const removeFromSelectedSongs = (songs: SongSelectedForSwap[]) => {
+		setSelectedSongs(selectedSongs.filter(selectedSong =>
+			!songs.some(songToRemove =>
+				// Remove only the song that matches both the title and artist name of the song argument
+				songToRemove.title === selectedSong.title && songToRemove.artistName === selectedSong.artistName
+			)
+		));
 	};
 
 	const addToSelectedAlbums = (album: AlbumSelectedForSwap) => {

@@ -36,8 +36,6 @@ const Playlist: React.FC<PlaylistProps> = ({ playlist }) => {
                 songsList,
             })
         }
-
-        console.log(JSON.stringify(selectedPlaylists))
     };
 
     const openModal = () => {
