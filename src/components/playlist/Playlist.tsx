@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { PlaylistInterface } from '../../Constants';
 import SongListModal from '../song-list-modal/SongListModal';
 
 import './Playlist.css';
+import { Context } from '../../Context';
 
 
 interface PlaylistProps {
@@ -13,6 +14,8 @@ const Playlist: React.FC<PlaylistProps> = ({ playlist }) => {
     const [isChecked, setIsChecked] = useState(false);
     const [isSongListModalOpen, setIsSongListModalOpen] = useState(false);
 
+    const { selectedPlaylists, addToSelectedPlaylists, removeFromSelectedPlaylists } = useContext(Context);
+
     const { title, coverArt, songsList } = playlist;
 
     const handleCheckboxChange = () => {
@@ -20,12 +23,21 @@ const Playlist: React.FC<PlaylistProps> = ({ playlist }) => {
         setIsChecked(newCheckedState);
         // user selected this for swap
         if (newCheckedState) {
-            console.log('adding')
+            addToSelectedPlaylists({
+                title,
+                songsList,
+            })
+
         }
         //user deselected this for swap
         else {
-            console.log('removing')
+            removeFromSelectedPlaylists({
+                title,
+                songsList,
+            })
         }
+
+        console.log(JSON.stringify(selectedPlaylists))
     };
 
     const openModal = () => {

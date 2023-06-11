@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Accordion from "../accordian/Accordian";
 import SearchBar from "../search-bar/SearchBar";
 import SelectAll from "../select-all/SelectAll";
@@ -8,6 +8,7 @@ import './MusicData.css';
 import Song from "../song/Song";
 import Album from "../album/Album";
 import Playlist from "../playlist/Playlist";
+import { Context } from "../../Context";
 
 interface MusicDataProps {
     musicData: MusicDataInterface;
@@ -18,6 +19,8 @@ interface MusicDataProps {
  */
 const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
     const [searchTerm, setSearchTerm] = useState("");
+
+    const { selectedSongs, selectedAlbums, selectedPlaylists } = useContext(Context);
 
     const handleSearchTermChange = (searchTerm: string) => {
         setSearchTerm(searchTerm);
@@ -51,6 +54,10 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
                     <Playlist key={index} playlist={playlist} />
                 ))}
             </Accordion>
+            {selectedSongs.length > 0 || selectedAlbums.length > 0 || selectedPlaylists.length > 0
+                ? <button className="initiate-swap-button">Swap em</button>
+                : null
+            }
         </div>
     );
 };

@@ -93,6 +93,7 @@ const FromPage: React.FC = () => {
     // Access granted, show the users library
     if (musicData !== null) {
         return (
+            // I should just pass a MusicData component but I can't figure out the styling properly without doing it this way
             <div className="from-page" >
                 <MusicData musicData={musicData} />
             </div>

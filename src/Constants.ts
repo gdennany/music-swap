@@ -45,7 +45,13 @@ export interface AlbumSelectedForSwap {
     artistName: string;
 }
 
+export interface PlaylistSelectedForSwap {
+    title: string;
+    songsList: SongSelectedForSwap[];
+}
+
 export interface MusicSelectedForSwap {
     songs: SongSelectedForSwap[];
     albums: AlbumSelectedForSwap[];
+    playlists: PlaylistSelectedForSwap[];
 };

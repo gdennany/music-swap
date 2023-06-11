@@ -37,7 +37,7 @@ const Album: React.FC<AlbumProps> = ({ album }) => {
             })
         }
 
-        console.log(JSON.stringify(selectedAlbums))
+        // console.log(JSON.stringify(selectedAlbums))
     };
 
     const openModal = () => {

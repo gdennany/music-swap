@@ -100,7 +100,7 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
         return {
             title: name,
             artistName: artists[0].name,
-            coverArt: album.images[0].url,
+            coverArt: album.images[0]?.url ?? '',
             audio: preview_url,
         } as SongInterface;
     });
@@ -110,8 +110,8 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
         return {
             title: name,
             artistName: artists[0].name,
-            coverArt: images[0].url,
-            songsList: parseSongsFromAlbum(tracks, images[0].url),
+            coverArt: images[0]?.url ?? '',
+            songsList: parseSongsFromAlbum(tracks, images[0]?.url ?? ''),
         } as AlbumInterface;
     });
 
@@ -137,7 +137,7 @@ const parseSpotifyData = async (likedSongs: any, albums: any, playlists: any, ac
 
         return {
             title: playlist.name,
-            coverArt: playlist.images[0].url,
+            coverArt: playlist.images[0]?.url ?? '',
             songsList: parseSongsFromPlaylist(tracks),
         } as PlaylistInterface;
     }));

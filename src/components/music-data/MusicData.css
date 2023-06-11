@@ -4,3 +4,8 @@
     min-height: 100vh;
     overflow: visible;
 }
+
+.initiate-swap-button {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}

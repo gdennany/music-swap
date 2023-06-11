@@ -73,7 +73,7 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
             })
         }
 
-        console.log(JSON.stringify(selectedSongs))
+        // console.log(JSON.stringify(selectedSongs))
     };
 
     return (
