@@ -18,3 +18,11 @@
     outline: none;
     background-color: transparent;
 }
+
+/* Adjust the layout for smaller screens */
+@media (max-width: 400px) {
+    .search-input {
+        /* prevent zoom on search bar click on mobile */
+        font-size: 16px;
+    }
+}

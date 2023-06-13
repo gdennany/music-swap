@@ -21,7 +21,7 @@ const Playlist: React.FC<PlaylistProps> = ({ playlist }) => {
     useEffect(() => {
         // Make sure checkbox is checked based on selectedAlbums state
         // CORNER CASE: if two playlists have the same name and number of songs they will both be removed (seems better than checking equality for every song in the list)
-        if (selectedPlaylists.find(p => p.title === playlist.title && p.songsList.length === playlist.songsList.length)) {
+        if (selectedPlaylists.find(p => p.title === playlist.title && p.songsList?.length === playlist.songsList?.length)) {
             setIsChecked(true);
         } else {
             setIsChecked(false);

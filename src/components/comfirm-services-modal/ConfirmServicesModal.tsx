@@ -19,7 +19,7 @@ const ConfirmServicesModal: React.FC<ConfirmServicesModalProps> = ({
   return (
     <div className="dialog-box">
       <div className="dialog-box-message">
-        To perform this swap, you will need to grant access to your {fromService} and {toService} accounts.
+        To perform this swap, you will need to grant access (log in) to your {fromService} and {toService} accounts.
         <br />
         <br />
         We only ask for the minimum required access to your data, and will never save or sell any of it.

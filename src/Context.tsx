@@ -22,8 +22,8 @@ interface IContextType extends IContextState {
 	removeFromSelectedSongs: (songs: SongSelectedForSwap[]) => void;
 	addToSelectedAlbums: (albums: AlbumSelectedForSwap[]) => void;
 	removeFromSelectedAlbums: (albums: AlbumSelectedForSwap[]) => void;
-	addToSelectedPlaylists: (playlist: PlaylistSelectedForSwap[]) => void;
-	removeFromSelectedPlaylists: (album: PlaylistSelectedForSwap[]) => void;
+	addToSelectedPlaylists: (playlists: PlaylistSelectedForSwap[]) => void;
+	removeFromSelectedPlaylists: (playlists: PlaylistSelectedForSwap[]) => void;
 }
 
 // Create the context (global state) with default values
@@ -111,7 +111,7 @@ export const ContextProvider: React.FC<ContextProviderProps> = ({ children }) =>
 	const removeFromSelectedPlaylists = (playlists: PlaylistSelectedForSwap[]) => {
 		setSelectedPlaylists(selectedPlaylists.filter(selectedPlaylist =>
 			!playlists.some(playlistToRemovce =>
-				playlistToRemovce.title === selectedPlaylist.title && playlistToRemovce.songsList.length === selectedPlaylist.songsList.length
+				playlistToRemovce.title === selectedPlaylist.title && playlistToRemovce.songsList?.length === selectedPlaylist.songsList?.length
 			)
 		));
 	};

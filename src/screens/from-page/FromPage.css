@@ -10,11 +10,6 @@
     box-sizing: border-box;
 }
 
-.title {
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
 .text-block {
     margin: 1rem 0;
     width: 80%;

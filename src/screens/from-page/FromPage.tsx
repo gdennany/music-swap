@@ -82,7 +82,6 @@ const FromPage: React.FC = () => {
     if (isEmptyString(accessToken)) {
         return (
             <div className="from-page" >
-                <h1 className="title">From Page</h1>
                 <p className="text-block">Click below so we can read from your {fromService} library.</p>
                 <AuthorizationButton serviceName={fromService} />
             </div>

@@ -21,6 +21,7 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
     const [songSearchTerm, setSongSearchTerm] = useState("");
     const [albumSearchTerm, setAlbumSearchTerm] = useState("");
     const [playlistSearchTerm, setPlaylistSearchTerm] = useState("");
+    const [callToActionModal, setCallToActionModal] = useState(false);
 
     const {
         selectedSongs, addToSelectedSongs, removeFromSelectedSongs,
@@ -124,31 +125,31 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
 
     return (
         <div className="music-data-page">
+            {selectedSongs.length > 0 || selectedAlbums.length > 0 || selectedPlaylists.length > 0
+                ? <button className="initiate-swap-button">Transfer Selected Music</button>
+                : null
+            }
             <Accordion title="&#x1F3B5;   Songs" onHeaderClicked={() => accordianOpened(1)}>
-                <SearchBar placeholder={'Search for songs by title or artist name'} onSearchTermChange={(searchTerm) => setSongSearchTerm(searchTerm)} />
+                <SearchBar placeholder={'Search by song title and artist name'} onSearchTermChange={(searchTerm) => setSongSearchTerm(searchTerm)} />
                 <SelectAllButtons onSelectAllClick={() => selectAllClick(1)} onUnselectAllClick={() => removeAllClick(1)} />
                 {visibleSongs.map((song: SongInterface) => (
                     <Song key={song.id} song={song} isSelectable={true} />
                 ))}
             </Accordion>
             <Accordion title="&#x1F4BF;   Albums" onHeaderClicked={() => accordianOpened(2)}>
-                <SearchBar placeholder={'Search for albums by title or artist name'} onSearchTermChange={(searchTerm) => setAlbumSearchTerm(searchTerm)} />
+                <SearchBar placeholder={'Search by album title & artist name'} onSearchTermChange={(searchTerm) => setAlbumSearchTerm(searchTerm)} />
                 <SelectAllButtons onSelectAllClick={() => selectAllClick(2)} onUnselectAllClick={() => removeAllClick(2)} />
                 {visibleAlbums.map((album: AlbumInterface) => (
                     <Album key={album.id} album={album} />
                 ))}
             </Accordion>
             <Accordion title="&#x1F4CB;   Playlists" onHeaderClicked={() => accordianOpened(3)}>
-                <SearchBar placeholder={'Search for playlists title'} onSearchTermChange={(searchTerm) => setPlaylistSearchTerm(searchTerm)} />
+                <SearchBar placeholder={'Search by playlist title'} onSearchTermChange={(searchTerm) => setPlaylistSearchTerm(searchTerm)} />
                 <SelectAllButtons onSelectAllClick={() => selectAllClick(3)} onUnselectAllClick={() => removeAllClick(3)} />
                 {visiblePlaylists.map((playlist: PlaylistInterface) => (
                     <Playlist key={playlist.id} playlist={playlist} />
                 ))}
             </Accordion>
-            {selectedSongs.length > 0 || selectedAlbums.length > 0 || selectedPlaylists.length > 0
-                ? <button className="initiate-swap-button">Swap em</button>
-                : null
-            }
         </div>
     );
 };

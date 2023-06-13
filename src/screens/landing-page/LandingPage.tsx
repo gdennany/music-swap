@@ -37,7 +37,7 @@ const LandingPage = () => {
                         Tired of your old streaming service?
                         <br />
                         <br />
-                        Now it's never been easier to transfer your old library to your new streaming service.
+                        Easily transfer your library to your new platform!
                     </p>
                 </div>
             </div>
