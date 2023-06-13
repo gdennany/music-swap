@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
 import Accordion from "../accordian/Accordian";
 import SearchBar from "../search-bar/SearchBar";
-import SelectAll from "../select-all/SelectAll";
-import { AlbumInterface, MusicDataInterface, PlaylistInterface, SongInterface } from "../../Constants";
+import { AlbumInterface, AlbumSelectedForSwap, MusicDataInterface, PlaylistInterface, PlaylistSelectedForSwap, SongInterface, SongSelectedForSwap } from "../../Constants";
 
 import './MusicData.css';
 import Song from "../song/Song";
 import Album from "../album/Album";
 import Playlist from "../playlist/Playlist";
 import { Context } from "../../Context";
+import SelectAllButtons from "../select-all-buttons/SelectAllButtons";
 
 interface MusicDataProps {
     musicData: MusicDataInterface;
@@ -22,93 +22,128 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
     const [albumSearchTerm, setAlbumSearchTerm] = useState("");
     const [playlistSearchTerm, setPlaylistSearchTerm] = useState("");
 
-    const { addToSelectedSongs, removeFromSelectedSongs, selectedSongs, selectedAlbums, selectedPlaylists } = useContext(Context);
+    const {
+        selectedSongs, addToSelectedSongs, removeFromSelectedSongs,
+        selectedAlbums, addToSelectedAlbums, removeFromSelectedAlbums,
+        selectedPlaylists, addToSelectedPlaylists, removeFromSelectedPlaylists,
+    } = useContext(Context);
 
-    const songSearchChange = (searchTerm: string) => {
-        setSongSearchTerm(searchTerm);
-    };
-
-    const albumSearchChange = (searchTerm: string) => {
-        setAlbumSearchTerm(searchTerm);
-    };
-
-    const playlistSearchChange = (searchTerm: string) => {
-        setPlaylistSearchTerm(searchTerm);
-    };
-
+    // Songs to display which match the search term. Support search by Song title and Artist name
     const visibleSongs = musicData.songs.filter((song: SongInterface) => {
-        // Support search by Song title and Artist name
         return (song.title.toLowerCase().includes(songSearchTerm.toLowerCase()) || song.artistName.toLowerCase().includes(songSearchTerm.toLowerCase()));
     });
 
-    const selectAllSongsClick = () => {
-        const songsToAdd = visibleSongs.map((song: SongInterface) => {
-            return {
-                title: song.title,
-                artistName: song.artistName,
-            };
-        });
-        addToSelectedSongs(songsToAdd);
+    // Albums to display which match the search term. Support search by Album title and Artist name
+    const visibleAlbums = musicData.albums.filter((album: AlbumInterface) => {
+        return (album.title.toLowerCase().includes(albumSearchTerm.toLowerCase()) || album.artistName.toLowerCase().includes(albumSearchTerm.toLowerCase()));
+    });
 
-        // console.log('selectedSongs: ' + JSON.stringify(selectedSongs))
+    // Playlists to display which match the search term. Support search by Playlist title
+    const visiblePlaylists = musicData.playlists.filter((playlist: PlaylistInterface) => {
+        return playlist.title.toLowerCase().includes(playlistSearchTerm.toLowerCase());
+    });
+
+    const selectAllClick = (type: number) => {
+        switch (type) {
+            case 1: //Songs
+                const songsToAdd = visibleSongs.map((song: SongInterface) => {
+                    return {
+                        title: song.title,
+                        artistName: song.artistName,
+                    } as SongSelectedForSwap;
+                });
+                addToSelectedSongs(songsToAdd);
+                break;
+            case 2: //Albums
+                const albumsToAdd = visibleAlbums.map((album: AlbumInterface) => {
+                    return {
+                        title: album.title,
+                        artistName: album.artistName,
+                    } as AlbumSelectedForSwap;
+                });
+                addToSelectedAlbums(albumsToAdd);
+                break;
+            case 3: //Playlists
+                const playlistsToAdd = visiblePlaylists.map((playlist: PlaylistInterface) => {
+                    return {
+                        title: playlist.title,
+                        songsList: playlist.songsList,
+                    } as PlaylistSelectedForSwap;
+                });
+                addToSelectedPlaylists(playlistsToAdd);
+                break;
+        }
     };
 
-    const removeAllSongsClick = () => {
-        const songsToRemove = visibleSongs.map((song: SongInterface) => {
-            return {
-                title: song.title,
-                artistName: song.artistName,
-            };
-        });
-        removeFromSelectedSongs(songsToRemove);
-    }
+    const removeAllClick = (type: number) => {
+        switch (type) {
+            case 1: //Songs
+                const songsToRemove = visibleSongs.map((song: SongInterface) => {
+                    return {
+                        title: song.title,
+                        artistName: song.artistName,
+                    } as SongSelectedForSwap;
+                });
+                removeFromSelectedSongs(songsToRemove);
+                break;
+            case 2: //Albums
+                const albumsToRemove = visibleAlbums.map((album: AlbumInterface) => {
+                    return {
+                        title: album.title,
+                        artistName: album.artistName,
+                    } as AlbumSelectedForSwap;
+                });
+                removeFromSelectedAlbums(albumsToRemove);
+                break;
+            case 3: //Playlists
+                const playlistsToRemove = visiblePlaylists.map((playlist: PlaylistInterface) => {
+                    return {
+                        title: playlist.title,
+                        songsList: playlist.songsList,
+                    } as PlaylistSelectedForSwap;
+                });
+                removeFromSelectedPlaylists(playlistsToRemove);
+                break;
+        }
+    };
 
-    // const handleSelectAllChange = (checked: boolean) => {
-    //     console.log(`SelectAll Checkbox is now ${checked ? "checked" : "unchecked"}`);
-    // }
-    const handleSelectAllChange = () => {
-        console.log(`SelectAll Checkbox`);
+    // Resets the respective search term states when an accordian is opened/closed. 
+    const accordianOpened = (accordian: number) => {
+        switch (accordian) {
+            case 1: //Songs
+                setSongSearchTerm("");
+                break;
+            case 2: //Albums
+                setAlbumSearchTerm("");
+                break;
+            case 3: //Playlists
+                setPlaylistSearchTerm("")
+                break;
+        }
     }
 
     return (
         <div className="music-data-page">
-            <Accordion title="&#x1F3B5;   Songs">
-                {/* TODO: searching not working properly (ex: search then play the song, search and select a song & remove the search) */}
-                <SearchBar placeholder={'Search for songs by title or artist name'} onSearchTermChange={songSearchChange} />
-                <div className="select-all">
-                    <SelectAll label="Select all &#x2193;" onChecked={selectAllSongsClick} />
-                    <SelectAll label="Unselect all &#x2193;" onChecked={removeAllSongsClick} />
-                </div>
-
-                {/* filter on search term */}
-                {visibleSongs
-                    // Map filtered result to Song object
-                    .map((song: SongInterface, index: number) => (
-                        <Song key={song.id} song={song} isSelectable={true} />
-                    ))}
+            <Accordion title="&#x1F3B5;   Songs" onHeaderClicked={() => accordianOpened(1)}>
+                <SearchBar placeholder={'Search for songs by title or artist name'} onSearchTermChange={(searchTerm) => setSongSearchTerm(searchTerm)} />
+                <SelectAllButtons onSelectAllClick={() => selectAllClick(1)} onUnselectAllClick={() => removeAllClick(1)} />
+                {visibleSongs.map((song: SongInterface) => (
+                    <Song key={song.id} song={song} isSelectable={true} />
+                ))}
             </Accordion>
-            <Accordion title="&#x1F4BF;   Albums">
-                <SearchBar placeholder={'Search for albums by title or artist name'} onSearchTermChange={albumSearchChange} />
-                <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
-                {musicData.albums.filter((album: AlbumInterface) => {
-                    // Support search by Album title and Artist name
-                    return (album.title.toLowerCase().includes(albumSearchTerm.toLowerCase()) || album.artistName.toLowerCase().includes(albumSearchTerm.toLowerCase()));
-                })
-                    .map((album: AlbumInterface, index: number) => (
-                        <Album key={index} album={album} />
-                    ))}
-
+            <Accordion title="&#x1F4BF;   Albums" onHeaderClicked={() => accordianOpened(2)}>
+                <SearchBar placeholder={'Search for albums by title or artist name'} onSearchTermChange={(searchTerm) => setAlbumSearchTerm(searchTerm)} />
+                <SelectAllButtons onSelectAllClick={() => selectAllClick(2)} onUnselectAllClick={() => removeAllClick(2)} />
+                {visibleAlbums.map((album: AlbumInterface) => (
+                    <Album key={album.id} album={album} />
+                ))}
             </Accordion>
-            <Accordion title="&#x1F4CB;   Playlists">
-                <SearchBar placeholder={'Search for playlists title'} onSearchTermChange={playlistSearchChange} />
-                <SelectAll label="Select all &#x2193;" onChecked={handleSelectAllChange} />
-                {musicData.playlists.filter((playlist: PlaylistInterface) => {
-                    // Support search by Playlist title
-                    return (playlist.title.toLowerCase().includes(playlistSearchTerm.toLowerCase()));
-                })
-                    .map((playlist: PlaylistInterface, index: number) => (
-                        <Playlist key={index} playlist={playlist} />
-                    ))}
+            <Accordion title="&#x1F4CB;   Playlists" onHeaderClicked={() => accordianOpened(3)}>
+                <SearchBar placeholder={'Search for playlists title'} onSearchTermChange={(searchTerm) => setPlaylistSearchTerm(searchTerm)} />
+                <SelectAllButtons onSelectAllClick={() => selectAllClick(3)} onUnselectAllClick={() => removeAllClick(3)} />
+                {visiblePlaylists.map((playlist: PlaylistInterface) => (
+                    <Playlist key={playlist.id} playlist={playlist} />
+                ))}
             </Accordion>
             {selectedSongs.length > 0 || selectedAlbums.length > 0 || selectedPlaylists.length > 0
                 ? <button className="initiate-swap-button">Swap em</button>

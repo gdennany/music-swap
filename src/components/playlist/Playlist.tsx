@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { PlaylistInterface } from '../../Constants';
+import React, { useContext, useEffect, useState } from 'react';
+import { PlaylistInterface, PlaylistSelectedForSwap } from '../../Constants';
 import SongListModal from '../song-list-modal/SongListModal';
 
 import './Playlist.css';
@@ -18,23 +18,40 @@ const Playlist: React.FC<PlaylistProps> = ({ playlist }) => {
 
     const { title, coverArt, songsList } = playlist;
 
+    useEffect(() => {
+        // Make sure checkbox is checked based on selectedAlbums state
+        // CORNER CASE: if two playlists have the same name and number of songs they will both be removed (seems better than checking equality for every song in the list)
+        if (selectedPlaylists.find(p => p.title === playlist.title && p.songsList.length === playlist.songsList.length)) {
+            setIsChecked(true);
+        } else {
+            setIsChecked(false);
+        }
+    }, [selectedPlaylists, playlist]);
+
     const handleCheckboxChange = () => {
         const newCheckedState = !isChecked;
         setIsChecked(newCheckedState);
         // user selected this for swap
         if (newCheckedState) {
-            addToSelectedPlaylists({
-                title,
-                songsList,
-            })
-
+            addToSelectedPlaylists(
+                [
+                    {
+                        title,
+                        songsList,
+                    } as PlaylistSelectedForSwap
+                ]
+            );
         }
         //user deselected this for swap
         else {
-            removeFromSelectedPlaylists({
-                title,
-                songsList,
-            })
+            removeFromSelectedPlaylists(
+                [
+                    {
+                        title,
+                        songsList,
+                    } as PlaylistSelectedForSwap
+                ]
+            );
         }
     };
 

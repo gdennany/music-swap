@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { AlbumInterface } from '../../Constants';
+import React, { useContext, useEffect, useState } from 'react';
+import { AlbumInterface, AlbumSelectedForSwap } from '../../Constants';
 import SongListModal from '../song-list-modal/SongListModal';
 
 import './Album.css';
@@ -18,26 +18,39 @@ const Album: React.FC<AlbumProps> = ({ album }) => {
 
     const { title, artistName, coverArt, songsList } = album;
 
+    useEffect(() => {
+        // Make sure checkbox is checked based on selectedAlbums state
+        if (selectedAlbums.find(a => a.title === album.title && a.artistName === album.artistName)) {
+            setIsChecked(true);
+        } else {
+            setIsChecked(false);
+        }
+    }, [selectedAlbums, album]);
+
     const handleCheckboxChange = () => {
         const newCheckedState = !isChecked;
         setIsChecked(newCheckedState);
         // user selected this for swap
         if (newCheckedState) {
-            addToSelectedAlbums({
-                title,
-                artistName,
-            })
+            addToSelectedAlbums([
+                {
+                    title,
+                    artistName,
+                } as AlbumSelectedForSwap
+            ]);
 
         }
         //user deselected this for swap
         else {
-            removeFromSelectedAlbums({
-                title,
-                artistName,
-            })
+            removeFromSelectedAlbums(
+                [
+                    {
+                        title,
+                        artistName,
+                    } as AlbumSelectedForSwap
+                ]
+            );
         }
-
-        // console.log(JSON.stringify(selectedAlbums))
     };
 
     const openModal = () => {

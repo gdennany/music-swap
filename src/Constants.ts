@@ -16,6 +16,7 @@ export interface SongInterface {
 
 // Data required to represent an Album component
 export interface AlbumInterface {
+    id: string;
     title: string;
     artistName: string;
     coverArt: string;
@@ -24,6 +25,7 @@ export interface AlbumInterface {
 
 // Data required to represent a Playlist component
 export interface PlaylistInterface {
+    id: string;
     title: string;
     coverArt: string;
     songsList: SongInterface[];

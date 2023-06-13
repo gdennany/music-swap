@@ -1,5 +1,5 @@
 import { AMAZON, APPLE, SPOTIFY, TIDAL } from '../../Constants';
-import { redirectToSpotifyLogin } from '../../scripts/spotify/spotifyAPI';
+import { redirectToSpotifyLogin } from '../../scripts/spotifyAPI/read';
 import './AuthorizationButton.css';
 
 

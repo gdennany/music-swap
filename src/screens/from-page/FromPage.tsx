@@ -3,7 +3,7 @@ import AuthorizationButton from '../../components/authorization-button/Authoriza
 import ErrorPage from '../../components/error-page/ErrorPage';
 import { Context } from '../../Context';
 import { isEmptyString } from '../../helpers/helpers';
-import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotify/spotifyAPI';
+import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotifyAPI/read';
 import LoadingPage from '../loading-page/LoadingPage';
 
 import "./FromPage.css";
@@ -56,7 +56,6 @@ const FromPage: React.FC = () => {
                 }
                 setIsLoading(false);
             } catch (exception) {
-                console.log('catch exception: ' + exception)
                 setIsError(true);
             }
 

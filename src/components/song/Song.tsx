@@ -23,7 +23,6 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
     const { title, artistName, coverArt, audio } = song;
 
     useEffect(() => {
-        window.scrollTo(0, 0);
         if (!clickedPlayAudio) {
             const newAudio = new Audio(audio);
             setClickedPlayAudio(newAudio);
@@ -41,10 +40,9 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
         } else {
             setIsChecked(false);
         }
-    }, [selectedSongs, playingAudio]);
+    }, [selectedSongs, playingAudio, song, audio, clickedPlayAudio, isPlaying]);
 
     const togglePlay = async () => {
-        console.log(song.title)
         if (isPlaying) {
             clickedPlayAudio?.pause();
         } else {
@@ -77,8 +75,6 @@ const Song: React.FC<SongProps> = ({ song, isSelectable }) => {
                 artistName,
             }]);
         }
-
-        console.log(JSON.stringify(selectedSongs))
     };
 
     return (

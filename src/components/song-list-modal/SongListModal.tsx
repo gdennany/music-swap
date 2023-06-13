@@ -20,7 +20,7 @@ const SongListModal: React.FC<SongListModalProps> = ({ isOpen, onRequestClose, s
         try {
             return (
                 <ul>
-                    {songs.map((song, index) => (
+                    {songs.map((song) => (
                         <Song key={song.id} song={song} isSelectable={false} />
                     ))}
                 </ul>

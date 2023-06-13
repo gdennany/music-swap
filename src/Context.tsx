@@ -18,14 +18,12 @@ interface IContextType extends IContextState {
 	setFromService: (value: string) => void;
 	setToService: (value: string) => void;
 	setPlayingAudio: (audio: HTMLAudioElement | null) => void;
-	// addToSelectedSongs: (song: SongSelectedForSwap) => void;
 	addToSelectedSongs: (songs: SongSelectedForSwap[]) => void;
-	// removeFromSelectedSongs: (song: SongSelectedForSwap) => void;
 	removeFromSelectedSongs: (songs: SongSelectedForSwap[]) => void;
-	addToSelectedAlbums: (album: AlbumSelectedForSwap) => void;
-	removeFromSelectedAlbums: (album: AlbumSelectedForSwap) => void;
-	addToSelectedPlaylists: (playlist: PlaylistSelectedForSwap) => void;
-	removeFromSelectedPlaylists: (album: PlaylistSelectedForSwap) => void;
+	addToSelectedAlbums: (albums: AlbumSelectedForSwap[]) => void;
+	removeFromSelectedAlbums: (albums: AlbumSelectedForSwap[]) => void;
+	addToSelectedPlaylists: (playlist: PlaylistSelectedForSwap[]) => void;
+	removeFromSelectedPlaylists: (album: PlaylistSelectedForSwap[]) => void;
 }
 
 // Create the context (global state) with default values
@@ -76,28 +74,46 @@ export const ContextProvider: React.FC<ContextProviderProps> = ({ children }) =>
 	const removeFromSelectedSongs = (songs: SongSelectedForSwap[]) => {
 		setSelectedSongs(selectedSongs.filter(selectedSong =>
 			!songs.some(songToRemove =>
-				// Remove only the song that matches both the title and artist name of the song argument
 				songToRemove.title === selectedSong.title && songToRemove.artistName === selectedSong.artistName
 			)
 		));
 	};
 
-	const addToSelectedAlbums = (album: AlbumSelectedForSwap) => {
-		setSelectedAlbums([...selectedAlbums, album]);
+	const addToSelectedAlbums = (albums: AlbumSelectedForSwap[]) => {
+		setSelectedAlbums(prevAlbums => {
+			const existingAlbumMap = new Map(prevAlbums.map(album => [album.title + album.artistName, album]));
+			const uniqueNewAlbums = albums.filter(album => !existingAlbumMap.has(album.title + album.artistName));
+
+			return [...prevAlbums, ...uniqueNewAlbums];
+		});
 	};
 
-	const removeFromSelectedAlbums = (album: AlbumSelectedForSwap) => {
-		setSelectedAlbums(selectedAlbums.filter(a => !(a.title === album.title && a.artistName === album.artistName)));
+	const removeFromSelectedAlbums = (albums: AlbumSelectedForSwap[]) => {
+		setSelectedAlbums(selectedAlbums.filter(selectedAlbum =>
+			!albums.some(albumToRemove =>
+				albumToRemove.title === selectedAlbum.title && albumToRemove.artistName === selectedAlbum.artistName
+			)
+		));
 	};
 
-	const addToSelectedPlaylists = (playlist: PlaylistSelectedForSwap) => {
-		setSelectedPlaylists([...selectedPlaylists, playlist]);
+	// Corner case for adding & removing selected playlists: playlists with the exact same name and number of tracks will be grouped together. The only way around this would be to check for
+	// equality of all songs in the playlist. Doesn't seem worth the extra work to cover this corner case.
+	// Example: Two separate playlists named "Vibez" both with 11 tracks. Selecting or un-selecting one will select or un-select both. 
+	const addToSelectedPlaylists = (playlists: PlaylistSelectedForSwap[]) => {
+		setSelectedPlaylists(prevPlaylists => {
+			const existingPlaylistMap = new Map(prevPlaylists.map(playlist => [playlist.title + playlist.songsList.length, playlist]));
+			const uniqueNewPlaylists = playlists.filter(playlist => !existingPlaylistMap.has(playlist.title + playlist.songsList.length));
+
+			return [...prevPlaylists, ...uniqueNewPlaylists];
+		});
 	};
 
-	const removeFromSelectedPlaylists = (playlist: PlaylistSelectedForSwap) => {
-		// setSelectedPlaylists(selectedPlaylists.filter(p => !(p.title === playlist.title && p.artistName === playlist.artistName)));
-		// CORNER CASE: if two playlists have the same name and number of songs they will both be removed
-		setSelectedPlaylists(selectedPlaylists.filter(p => (p.title !== playlist.title && p.songsList.length !== playlist.songsList.length)));
+	const removeFromSelectedPlaylists = (playlists: PlaylistSelectedForSwap[]) => {
+		setSelectedPlaylists(selectedPlaylists.filter(selectedPlaylist =>
+			!playlists.some(playlistToRemovce =>
+				playlistToRemovce.title === selectedPlaylist.title && playlistToRemovce.songsList.length === selectedPlaylist.songsList.length
+			)
+		));
 	};
 
 	return (

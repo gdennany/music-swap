@@ -15,9 +15,6 @@ export const redirectToSpotifyLogin = () => {
         // redirect_uri: process.env.REACT_APP_SPOTIFY_REDIRECT_URI,
         redirect_uri: redirect_uri,
         //TODO: adjust scope if needed.
-        // user-read-private & user-read-email => Not sure if necessary
-        // user-library-read => access to "Your Music" library (i.e. liked songs & albums)
-        // playlist-read-private playlist-read-collaborative => read users public (collaborative) and private playlists
         scope: 'user-library-read playlist-read-private playlist-read-collaborative'
     });
 
@@ -45,7 +42,6 @@ export async function getSpotifyAccessToken(authorizationCode: string) {
         );
 
         // TODO handle refresh token so user doesn't have to go through entire auth process again. 
-        // Access tokens expire after a set amount of time(maybe an hour?).
         // const { access_token, refresh_token } = response.data;
         const { access_token } = response.data;
         // Save the access token here
@@ -102,8 +98,9 @@ const parseSpotifyData = async (songs: any, albums: any, playlists: any, accessT
     });
 
     albums = albums.items.map((album: any) => {
-        const { name, artists, images, tracks } = album.album;
+        const { id, name, artists, images, tracks } = album.album;
         return {
+            id: id,
             title: name,
             artistName: artists[0].name,
             coverArt: images[0]?.url ?? '',
@@ -112,6 +109,8 @@ const parseSpotifyData = async (songs: any, albums: any, playlists: any, accessT
     });
 
     playlists = await Promise.all(playlists.items.map(async (playlist: any) => {
+        const { id, name, images } = playlist;
+
         const getPlaylistSongs = async (url: string) => {
             const response = await axios.get(url, {
                 headers: {
@@ -133,28 +132,29 @@ const parseSpotifyData = async (songs: any, albums: any, playlists: any, accessT
         try {
             tracks = await getPlaylistSongs(playlist.tracks.href);
         } catch (error) {
-            console.log('Error in getPlaylistSongs: ' + error);
+            console.error('Error in getPlaylistSongs for playlist ' + JSON.stringify(playlist) + error);
         }
 
         return {
-            title: playlist.name,
-            coverArt: playlist.images[0]?.url ?? '',
+            id: id,
+            title: name,
+            coverArt: images[0]?.url ?? '',
             songsList: parseSongsFromPlaylist(tracks),
         } as PlaylistInterface;
     }));
 
-    let spotyifyData = {
+
+    return {
         songs,
         albums,
         playlists
     } as MusicDataInterface;
-
-    return spotyifyData;
 }
 function parseSongsFromAlbum(tracks: any, coverArt: string): SongInterface[] {
     return tracks.items.map((song: any) => {
-        const { name, artists, preview_url } = song;
+        const { id, name, artists, preview_url } = song;
         return {
+            id: id,
             title: name,
             artistName: artists[0].name,
             coverArt: coverArt,
@@ -168,6 +168,7 @@ function parseSongsFromPlaylist(tracks: any): SongInterface[] {
 
         if (!song.track || !song.track.album) {
             return {
+                id: 'unknown',
                 title: 'Unknown title',
                 artistName: 'Unknown artist',
                 coverArt: '',
@@ -175,14 +176,15 @@ function parseSongsFromPlaylist(tracks: any): SongInterface[] {
             } as SongInterface;
         }
 
+        const id = song.track?.id ?? 'unknown';
         const album = song.track?.album ?? {};
         const name = song.track?.name ?? '';
         const artists = song.track?.artists ?? [{}];
         const preview_url = song.track?.preview_url ?? '';
 
         return {
+            id: id,
             title: name,
-            //TODO: albumName
             artistName: artists[0].name ?? 'Unknown artist',
             coverArt: album.images[0]?.url ?? '',
             audio: preview_url,
