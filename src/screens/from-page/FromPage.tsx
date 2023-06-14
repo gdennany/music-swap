@@ -3,7 +3,7 @@ import AuthorizationButton from '../../components/authorization-button/Authoriza
 import ErrorPage from '../../components/error-page/ErrorPage';
 import { Context } from '../../Context';
 import { isEmptyString } from '../../helpers/helpers';
-import { fetchSpotifyData, getSpotifyAccessToken } from '../../scripts/spotifyAPI/read';
+import { fetchSpotifyData, getSpotifyAccessToken } from '../../api/spotify/read';
 import LoadingPage from '../loading-page/LoadingPage';
 
 import "./FromPage.css";
@@ -41,7 +41,7 @@ const FromPage: React.FC = () => {
 
                             //TODO figure out how to re-use the same access token on page refresh 
                             const token = await getSpotifyAccessToken(code);
-                            //Reset the URL to /fromServiceSelection on page refresh
+                            //Reset the URL to /swapScreen on page refresh
                             const urlWithoutCode = window.location.protocol + "//" + window.location.host + window.location.pathname;
                             window.history.replaceState({}, document.title, urlWithoutCode);
                             if (token) {

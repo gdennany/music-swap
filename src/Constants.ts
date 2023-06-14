@@ -50,6 +50,7 @@ export interface AlbumSelectedForSwap {
 
 export interface PlaylistSelectedForSwap {
     title: string;
+    // TODO: get playlist image? Or just use some default image?
     songsList: SongSelectedForSwap[];
 }
 

@@ -21,7 +21,6 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
     const [songSearchTerm, setSongSearchTerm] = useState("");
     const [albumSearchTerm, setAlbumSearchTerm] = useState("");
     const [playlistSearchTerm, setPlaylistSearchTerm] = useState("");
-    const [callToActionModal, setCallToActionModal] = useState(false);
 
     const {
         selectedSongs, addToSelectedSongs, removeFromSelectedSongs,
@@ -123,10 +122,16 @@ const MusicData: React.FC<MusicDataProps> = ({ musicData }) => {
         }
     }
 
+    const beginSwap = () => {
+        console.log('selectedSongs: ' + JSON.stringify(selectedSongs))
+        console.log('selectedAlbums: ' + JSON.stringify(selectedAlbums))
+        console.log('selectedPlaylists: ' + JSON.stringify(selectedPlaylists))
+    };
+
     return (
         <div className="music-data-page">
             {selectedSongs.length > 0 || selectedAlbums.length > 0 || selectedPlaylists.length > 0
-                ? <button className="initiate-swap-button">Transfer Selected Music</button>
+                ? <button className="initiate-swap-button" onClick={beginSwap}>Swap selected music</button>
                 : null
             }
             <Accordion title="&#x1F3B5;   Songs" onHeaderClicked={() => accordianOpened(1)}>

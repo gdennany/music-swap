@@ -21,6 +21,7 @@ function App() {
                   <ServiceSelectionPage id="serviceSelectionPage" />
                 </>
               } />
+              {/* TODO: update route name to something better */}
               <Route path="/fromServiceSelection" element={<FromPage />} />
               <Route path="*" element={<ErrorPage errorDescription="Unrecognized URL" />} />
             </Routes>
