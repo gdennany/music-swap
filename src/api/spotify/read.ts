@@ -1,7 +1,7 @@
 import axios from 'axios';
 import queryString from 'query-string';
 
-import { client_id, client_secret, redirect_uri } from '../../private';
+import { spotify_client_id, spotify_client_secret, redirect_uri } from '../../private';
 import { AlbumInterface, MusicDataInterface, PlaylistInterface, SongInterface } from '../../Constants';
 
 /**
@@ -10,7 +10,7 @@ import { AlbumInterface, MusicDataInterface, PlaylistInterface, SongInterface } 
 export const redirectToSpotifyLogin = () => {
     const queries = queryString.stringify({
         // client_id: process.env.REACT_APP_SPOTIFY_CLIENT_ID,
-        client_id: client_id,
+        client_id: spotify_client_id,
         response_type: 'code',
         // redirect_uri: process.env.REACT_APP_SPOTIFY_REDIRECT_URI,
         redirect_uri: redirect_uri,
@@ -36,7 +36,7 @@ export async function getSpotifyAccessToken(authorizationCode: string) {
             {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + btoa(client_id + ':' + client_secret),
+                    'Authorization': 'Basic ' + btoa(spotify_client_id + ':' + spotify_client_secret),
                 }
             }
         );

@@ -2,8 +2,9 @@ export const AMAZON = "Amazon";
 export const APPLE = "Apple";
 export const SPOTIFY = "Spotify";
 export const TIDAL = "Tidal";
+export const YOUTUBE = "Youtube";
 
-export const SERVICES = [AMAZON, APPLE, SPOTIFY, TIDAL];
+export const SERVICES = [AMAZON, APPLE, SPOTIFY, TIDAL, YOUTUBE];
 
 // Data required to represent a Song component
 export interface SongInterface {

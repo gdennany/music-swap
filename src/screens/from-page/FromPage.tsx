@@ -9,6 +9,9 @@ import LoadingPage from '../loading-page/LoadingPage';
 import "./FromPage.css";
 import MusicData from '../../components/music-data/MusicData';
 import { AMAZON, APPLE, MusicDataInterface, SPOTIFY, TIDAL } from '../../Constants';
+import { fetchAppleData } from '../../api/apple/read';
+import { fetchTidalData } from '../../api/tidal/read';
+import { fetchAmazonData, getAmazonAccessToken, redirectToAmazonLogin } from '../../api/amazon/read';
 
 /**
  * Page where user authorizes and selects songs/playlists/etc they want to swap over.
@@ -31,16 +34,27 @@ const FromPage: React.FC = () => {
                 setIsLoading(true);
                 switch (localStorage.getItem('fromService')) {
                     case AMAZON:
+                        const amazonAuthCode = new URLSearchParams(window.location.search).get('code');
+                        if (amazonAuthCode) {
+                            const token = await getAmazonAccessToken(amazonAuthCode);
+                            if (token) {
+                                // TODO: amazon access token fetch working properly, but need to wait for amazon team to allow me access to
+                                // api.music.amazon.dev before I can complete fetchAmazonData. Currently receiving a 403
+                                setAccessToken(token);
+                                // const data = await fetchAmazonData(token);
+                                // setMusicData(data);
+                            }
+                        }
                         break;
                     case APPLE:
+                        console.log('in apple case');
+                        const data = await fetchAppleData();
                         break;
                     case SPOTIFY:
-                        const code = new URLSearchParams(window.location.search).get('code');
-                        if (code) {
-                            await setAccessToken('test')
-
+                        const spotifyAuthCode = new URLSearchParams(window.location.search).get('code');
+                        if (spotifyAuthCode) {
                             //TODO figure out how to re-use the same access token on page refresh 
-                            const token = await getSpotifyAccessToken(code);
+                            const token = await getSpotifyAccessToken(spotifyAuthCode);
                             //Reset the URL to /swapScreen on page refresh
                             const urlWithoutCode = window.location.protocol + "//" + window.location.host + window.location.pathname;
                             window.history.replaceState({}, document.title, urlWithoutCode);
@@ -52,6 +66,7 @@ const FromPage: React.FC = () => {
                         }
                         break;
                     case TIDAL:
+                        const data1 = await fetchTidalData();
                         break;
                 }
                 setIsLoading(false);

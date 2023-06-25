@@ -1,4 +1,5 @@
 import { AMAZON, APPLE, SPOTIFY, TIDAL } from '../../Constants';
+import { redirectToAmazonLogin } from '../../api/amazon/read';
 import { redirectToSpotifyLogin } from '../../api/spotify/read';
 import './AuthorizationButton.css';
 
@@ -16,6 +17,7 @@ const AuthorizationButton: React.FC<AuthorizationButtonProps> = ({ serviceName }
     const handleClick = (serviceName: string) => {
         switch (serviceName) {
             case AMAZON:
+                redirectToAmazonLogin();
                 break;
             case APPLE:
                 break;
