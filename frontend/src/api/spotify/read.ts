@@ -150,6 +150,7 @@ const parseSpotifyData = async (songs: any, albums: any, playlists: any, accessT
         playlists
     } as MusicDataInterface;
 }
+
 function parseSongsFromAlbum(tracks: any, coverArt: string): SongInterface[] {
     return tracks.items.map((song: any) => {
         const { id, name, artists, preview_url } = song;

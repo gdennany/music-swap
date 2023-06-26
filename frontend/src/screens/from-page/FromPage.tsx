@@ -10,8 +10,8 @@ import "./FromPage.css";
 import MusicData from '../../components/music-data/MusicData';
 import { AMAZON, APPLE, MusicDataInterface, SPOTIFY, TIDAL } from '../../Constants';
 import { fetchAppleData } from '../../api/apple/read';
-import { fetchTidalData } from '../../api/tidal/read';
 import { fetchAmazonData, getAmazonAccessToken, redirectToAmazonLogin } from '../../api/amazon/read';
+import { fetchTidalData } from '../../api/tidal/read';
 
 /**
  * Page where user authorizes and selects songs/playlists/etc they want to swap over.
@@ -47,7 +47,6 @@ const FromPage: React.FC = () => {
                         }
                         break;
                     case APPLE:
-                        console.log('in apple case');
                         const data = await fetchAppleData();
                         break;
                     case SPOTIFY:
@@ -66,8 +65,8 @@ const FromPage: React.FC = () => {
                         }
                         break;
                     case TIDAL:
-                        const data1 = await fetchTidalData();
                         break;
+
                 }
                 setIsLoading(false);
             } catch (exception) {
@@ -93,12 +92,17 @@ const FromPage: React.FC = () => {
         return <ErrorPage errorDescription="Please don't access this URL directly &#x1F600;" />;
     }
 
+    const testTidalButtonClick = async () => {
+        const data = await fetchTidalData();
+        setMusicData(data);
+    }
     // No access granted to read from fromService yet, so ask for it
-    if (isEmptyString(accessToken)) {
+    if (isEmptyString(accessToken) && musicData === null) {
         return (
             <div className="from-page" >
                 <p className="text-block">Click below so we can read from your {fromService} library.</p>
                 <AuthorizationButton serviceName={fromService} />
+                <button onClick={testTidalButtonClick} > click me</button>
             </div>
         );
     }

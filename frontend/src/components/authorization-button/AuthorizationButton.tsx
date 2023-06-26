@@ -1,6 +1,7 @@
 import { AMAZON, APPLE, SPOTIFY, TIDAL } from '../../Constants';
 import { redirectToAmazonLogin } from '../../api/amazon/read';
 import { redirectToSpotifyLogin } from '../../api/spotify/read';
+import { redirectToTidalLogin } from '../../api/tidal/read';
 import './AuthorizationButton.css';
 
 
@@ -25,7 +26,7 @@ const AuthorizationButton: React.FC<AuthorizationButtonProps> = ({ serviceName }
                 redirectToSpotifyLogin();
                 break;
             case TIDAL:
-                break;
+                redirectToTidalLogin();
         }
     };
 
